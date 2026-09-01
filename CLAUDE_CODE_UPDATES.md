@@ -1,10 +1,18 @@
 # Claude Code 更新履歴
 
-Last recorded version: 2.1.251
+Last recorded version: 2.1.252
 
 このファイルは Claude Code (Anthropic の CLI コーディングエージェント) の
 リリース内容を定期的に追跡し、日本語で要約したものです。新しい日付のセクションほど
 ファイルの上に追加されます。
+
+## 2026-09-01
+
+### 2.1.252
+- Macの一部環境で発生していた「task output swap refused」によるBashコマンド失敗を修正
+- `.claude/settings.local.json`が未作成のプロジェクトで「常に許可」が保存されない不具合を修正
+- Claude DesktopやVS Code経由のRemote Controlセッションが、claude.aiとの接続不調時にツール完了後も数分間固まる不具合を修正
+- ディスク満杯時のgitエラーなど非常に大きな失敗出力を伴うバックグラウンドタスク通知がAPIリクエストサイズ上限を超えてしまう不具合を修正
 
 ## 2026-08-29
 
