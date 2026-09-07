@@ -1,0 +1,5 @@
+package com.koutamurakami.fitness_app
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
