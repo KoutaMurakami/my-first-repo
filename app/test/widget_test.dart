@@ -23,6 +23,10 @@ void main() {
     // pump() で1フレーム進めて、Stream の最初の値(空の一覧)が反映されるのを待つ。
     await tester.pump();
 
+    // ボトムナビの初期表示タブは「筋トレ」なので、まず「からだ」タブに切り替える。
+    await tester.tap(find.widgetWithText(NavigationDestination, 'からだ'));
+    await tester.pump();
+
     // 起動直後は「まだ記録がありません」と表示される想定。
     expect(find.text('まだ記録がありません'), findsOneWidget);
 
@@ -45,6 +49,40 @@ void main() {
     // そのため、テストの最後で明示的にウィジェットツリーを空にして破棄を発生させ、
     // 実時間を少しだけ進める pump を挟んで、そのタイマーを確実に処理しきってから
     // DBを閉じる(この順番が重要: 先にウィジェットを破棄→pump→DBを閉じる)。
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(milliseconds: 1));
+    await database.close();
+  });
+
+  testWidgets('種目を選んでトレーニングを終了すると履歴に残る', (WidgetTester tester) async {
+    final database = AppDatabase.forTesting();
+    // 種目選択画面が空では何も選べないので、本番と同じ初期データを入れておく。
+    await database.seedExercisesIfEmpty();
+
+    await tester.pumpWidget(FitnessApp(database: database));
+    await tester.pump();
+
+    // 初期表示タブは「筋トレ」。
+    await tester.tap(find.text('＋ 種目を選んで記録する'));
+    await tester.pumpAndSettle();
+
+    // 種目選択画面で「ベンチプレス」を検索して選ぶ。
+    await tester.enterText(find.byType(TextField), 'ベンチプレス');
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ListTile, 'ベンチプレス'));
+    await tester.pumpAndSettle();
+
+    // セット記録画面に遷移し、種目名が表示されていることを確認。
+    expect(find.text('ベンチプレス'), findsOneWidget);
+
+    // 何も入力しないまま終了しても、セッションが履歴に記録されることを確認する。
+    await tester.tap(find.text('トレーニングを終了'));
+    await tester.pumpAndSettle();
+
+    // 筋トレ画面に戻り、履歴に「ベンチプレス」のセッションが表示されるはず。
+    expect(find.text('ベンチプレス'), findsOneWidget);
+    expect(find.text('まだ記録がありません'), findsNothing);
+
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump(const Duration(milliseconds: 1));
     await database.close();
