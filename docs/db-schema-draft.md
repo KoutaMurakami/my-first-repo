@@ -23,9 +23,11 @@ profiles
 - user_id (PK, auth.usersのidと1:1)
 - display_name
 - sex (male/female)                 -- 基礎代謝計算(Mifflin-St Jeor)に使用
+- age                                -- 誕生日ではなく年齢を直接持つ(下記の通り)
 - height_cm
-- birth_date
+- weight_kg                         -- 基礎代謝計算用の「現在体重」(下記の通りbody_measurementsとは別管理)
 - target_weight_kg                  -- 「からだ」画面の目標体重表示に使用
+- body_fat_pct (nullable)           -- Katch-McArdle式を使うかどうかの分岐に使用
 - activity_level (low/light/mid/high/vhigh)  -- 活動係数 ×1.2〜×1.9
 - goal (減量/体型維持/筋肥大/筋力アップ)
 - experience_level (初心者/中級/上級) -- AIメニュー提案の種目数・強度決定に使用
@@ -36,7 +38,8 @@ profiles
 - created_at
 ```
 
-- **なぜ「体重」自体は`profiles`に持たせないか**: 現在体重は`body_measurements`に時系列で記録済みなので、二重管理を避けるため基礎代謝計算には`body_measurements`の最新値を使う想定。体脂肪率も同様(Katch-McArdle式を使うかどうかの判定に、最新の`body_measurements.body_fat_pct`があるかで分岐)。
+- **体重・体脂肪率を`body_measurements`と別に`profiles`にも持たせる理由(方針変更)**: 当初は「二重管理を避けて`body_measurements`の最新値を使う」設計にしていたが、UI設計(`docs/design/Fitness App.dc.html`の`calc()`)の実装に合わせたところ、プロトタイプ自体が体重・体脂肪率を基本情報(プロフィール)側の単純な入力値として扱っていることが分かった。`body_measurements`はあくまで「からだ」タブでの時系列記録(履歴)、`profiles.weight_kg`/`body_fat_pct`は「基礎代謝計算に使う今の値」という役割分担にする(基本情報画面を開いた時点では、からだタブの最新記録をデフォルト値として表示し、そこから上書きできるようにする想定)。
+- **年齢を`birth_date`ではなく`age`で持つ理由**: 同様にUI設計側が年齢を直接の数値入力として扱っていたため、誤差が出にくい誕生日管理より、プロトタイプの実装に合わせたシンプルな方を採用した。
 
 ## 1. 筋トレ記録
 

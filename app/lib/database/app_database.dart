@@ -166,6 +166,89 @@ class MyTrainingListItems extends Table {
   TextColumn get setType => text().withDefault(const Constant('ストレート'))();
 }
 
+// --- 基本情報(プロフィール)・分割法のテーブル ---
+//
+// docs/db-schema-draft.md の「0. 認証・ユーザー」セクションに対応。
+// まだ認証機能が無いので、このテーブルは常に1行だけ(id=1)を使い回す
+// 「アプリ全体でただ1人のユーザー」を表す行として扱う。
+
+// 分割法(例: PPL、上下2分割など)。
+class TrainingSplits extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  // '全身法' / '上下2分割' / 'PPL' / '4分割' / '5分割' / 'カスタム'
+  TextColumn get preset => text()();
+}
+
+// 分割法の中の1日(例: 「Day1 プッシュ」)。
+class SplitDays extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  IntColumn get splitId => integer().references(TrainingSplits, #id)();
+
+  IntColumn get orderIndex => integer()();
+
+  // 空ならUI側で部位名を連結した表示名を作る(例:「胸・三頭」)。
+  TextColumn get label => text().nullable()();
+}
+
+// 分割法の1日に割り当てる部位(複数選択できるため中間テーブルにしている)。
+class SplitDayParts extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  IntColumn get splitDayId => integer().references(SplitDays, #id)();
+
+  // 胸/背中/脚/肩/二頭/三頭/腹筋/臀部
+  TextColumn get bodyPart => text()();
+}
+
+// 基礎代謝・TDEE・目標PFC計算に使う基本情報。
+//
+// docs/design/README.md の計算ロジック(calc())が「体重」「体脂肪率」「年齢」を
+// プロフィール側の単純な入力値として扱っていたことに合わせて、
+// bodyMeasurements(からだタブの時系列記録)とは別にこのテーブルで持つ。
+// (db-schema-draft.md の方針変更メモを参照)
+class Profiles extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  // 'male' / 'female'
+  TextColumn get sex => text().withDefault(const Constant('male'))();
+
+  IntColumn get age => integer().nullable()();
+
+  RealColumn get heightCm => real().nullable()();
+
+  // 基礎代謝計算に使う「今の体重」。からだタブの最新記録を初期値として
+  // 画面側で表示し、ここで上書きできるようにする想定。
+  RealColumn get weightKg => real().nullable()();
+
+  RealColumn get targetWeightKg => real().nullable()();
+
+  // Katch-McArdle式を使うかどうかの分岐に使う。未入力ならMifflin-St Jeor式。
+  RealColumn get bodyFatPct => real().nullable()();
+
+  // low / light / mid / high / vhigh (活動係数 ×1.2〜×1.9)
+  TextColumn get activityLevel => text().withDefault(const Constant('mid'))();
+
+  // 減量 / 体型維持 / 筋肥大 / 筋力アップ
+  TextColumn get goal => text().withDefault(const Constant('体型維持'))();
+
+  // 初心者 / 中級 / 上級
+  TextColumn get experienceLevel =>
+      text().withDefault(const Constant('初心者'))();
+
+  IntColumn get weeklyFreq => integer().withDefault(const Constant(3))();
+
+  IntColumn get activeSplitId =>
+      integer().nullable().references(TrainingSplits, #id)();
+
+  // メンテナンスカロリーを自動計算値ではなく実測値で上書きするか。
+  BoolColumn get maintenanceManual =>
+      boolean().withDefault(const Constant(false))();
+
+  RealColumn get maintenanceKcalManual => real().nullable()();
+}
+
 // --- データベース本体 ---
 //
 // @DriftDatabase アノテーションは「このテーブル一覧を使ったDBクラスを生成して」という
@@ -182,6 +265,10 @@ class MyTrainingListItems extends Table {
   WorkoutSetAssists,
   MyTrainingLists,
   MyTrainingListItems,
+  TrainingSplits,
+  SplitDays,
+  SplitDayParts,
+  Profiles,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -196,8 +283,9 @@ class AppDatabase extends _$AppDatabase {
   //
   // 1 → 2: 筋トレ記録一式(Exercises/WorkoutSessions/WorkoutSetGroups/WorkoutSets/
   //        WorkoutSetAssists/MyTrainingLists/MyTrainingListItems)を追加。
+  // 2 → 3: 基本情報・分割法(Profiles/TrainingSplits/SplitDays/SplitDayParts)を追加。
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -216,6 +304,12 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(workoutSetAssists);
             await m.createTable(myTrainingLists);
             await m.createTable(myTrainingListItems);
+          }
+          if (from < 3) {
+            await m.createTable(trainingSplits);
+            await m.createTable(splitDays);
+            await m.createTable(splitDayParts);
+            await m.createTable(profiles);
           }
         },
       );
@@ -236,6 +330,16 @@ class AppDatabase extends _$AppDatabase {
         ],
       );
     });
+  }
+
+  // プロフィールは「アプリ全体でただ1行」として扱う(認証機能が無いため)。
+  // まだ1行も無ければ、全項目デフォルト値の行を作ってから返す。
+  Future<Profile> loadOrCreateProfile() async {
+    final existing = await (select(profiles)..limit(1)).getSingleOrNull();
+    if (existing != null) return existing;
+
+    final id = await into(profiles).insert(const ProfilesCompanion());
+    return (select(profiles)..where((t) => t.id.equals(id))).getSingle();
   }
 }
 
