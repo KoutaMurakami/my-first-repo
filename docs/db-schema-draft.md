@@ -130,12 +130,14 @@ split_day_parts(各日に割り当てる部位。複数選択のため中間テ�
 ```
 nutrients(栄養素マスタ)
 - id
+- key (プログラムから参照する固定コード: kcal/p/f/c/ca/vc/fe/fib ...)
 - name (タンパク質、脂質、炭水化物、ビタミンC など)
 - unit (g, mg, μg など)
 
 foods(食品マスタ)
 - id
 - name
+- serving_label / serving_g (画面に出す「1食分」の目安表示とそのグラム数)
 - source (公的食品DB由来 / ユーザー独自入力)
 
 food_nutrients(食品ごとの栄養素量、100gあたり)
@@ -219,3 +221,10 @@ progress_photos(進捗写真)
 
 1. ~~**セット種別の表現方法**(グループ化方式)、この設計でOKか~~ → UI設計(`super_set`追加)でも破綻せず機能したため解決済みとする
 2. **食品データの取得元**、文部科学省の食品成分DBを使う方針でOKか(UI設計では未言及のため引き続き未確定)
+
+## 5. 実装状況メモ(2026年10月時点)
+
+- **食品の初期データは概算値**: `app/lib/database/food_seed.dart` の約35品目は、動作確認用に用意した概算値で、日本食品標準成分表から正式に取り込んだものではない(相談ポイント②は引き続き未確定)。正式取り込み時にこのファイルを置き換える。
+- **栄養素は現在8種類**(kcal/たんぱく質/脂質/炭水化物/カルシウム/ビタミンC/鉄/食物繊維)。残りのビタミン・ミネラルは、栄養素マスタに行を足すだけで追加できる(正規化したメリット)。
+- 実装済みテーブル: `body_measurements` / `exercises` / `workout_*` / `my_training_*` / `profiles` / `training_splits` / `split_days` / `split_day_parts` / `nutrients` / `foods` / `food_nutrients` / `meal_logs` / `meal_log_items` / `meal_lists` / `meal_list_items`。
+- 未実装: `activity_logs` / `calorie_burn_estimates` / `progress_photos`(進捗写真・活動量)。

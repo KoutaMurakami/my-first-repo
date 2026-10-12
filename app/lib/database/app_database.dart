@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import 'exercise_seed.dart';
+import 'food_seed.dart';
 
 part 'app_database.g.dart';
 
@@ -249,6 +250,90 @@ class Profiles extends Table {
   RealColumn get maintenanceKcalManual => real().nullable()();
 }
 
+// --- 食事管理まわりのテーブル ---
+//
+// docs/db-schema-draft.md の「2. 食事管理」に対応。
+// 栄養素を「食品の列」ではなく別テーブル(栄養素マスタ)に分けているのは、
+// 栄養素を後から増やす時にテーブル構造を変えずに済むようにするため(正規化)。
+
+// 栄養素マスタ(例: kcal / たんぱく質 / カルシウム)。
+class Nutrients extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  // プログラム側から参照するための固定コード(kcal/p/f/c/ca/vc/fe/fib ...)。
+  // 表示名や単位は変わっても、このコードは変えない。
+  TextColumn get key => text().unique()();
+
+  TextColumn get name => text()();
+
+  TextColumn get unit => text()();
+}
+
+// 食品マスタ。
+class Foods extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  TextColumn get name => text()();
+
+  // 画面に出す「1食分」の目安表示(例: "1個 50g")と、そのグラム数。
+  TextColumn get servingLabel => text()();
+
+  RealColumn get servingG => real()();
+
+  // 'seed'(初期データ) / 'custom'(ユーザー独自入力) など、データの出どころ。
+  TextColumn get source => text().withDefault(const Constant('seed'))();
+}
+
+// 食品ごとの栄養素量(100gあたり)。
+class FoodNutrients extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  IntColumn get foodId => integer().references(Foods, #id)();
+
+  IntColumn get nutrientId => integer().references(Nutrients, #id)();
+
+  RealColumn get amountPer100g => real()();
+}
+
+// 食事記録(1回の食事イベント)。朝昼夕の固定枠は持たず、食べた時刻だけを持つ。
+class MealLogs extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  DateTimeColumn get eatenAt => dateTime()();
+
+  TextColumn get note => text().nullable()();
+}
+
+// 食事記録の中身(食べたもの1品ごと)。
+class MealLogItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  IntColumn get mealLogId => integer().references(MealLogs, #id)();
+
+  IntColumn get foodId => integer().references(Foods, #id)();
+
+  RealColumn get quantityG => real()();
+}
+
+// 食事マイリスト(「朝の定番」「トレ後」のような定番セット)。
+class MealLists extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  TextColumn get name => text()();
+}
+
+class MealListItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  IntColumn get listId => integer().references(MealLists, #id)();
+
+  IntColumn get foodId => integer().references(Foods, #id)();
+
+  RealColumn get quantityG => real()();
+
+  IntColumn get orderIndex => integer()();
+}
+
 // --- データベース本体 ---
 //
 // @DriftDatabase アノテーションは「このテーブル一覧を使ったDBクラスを生成して」という
@@ -269,6 +354,13 @@ class Profiles extends Table {
   SplitDays,
   SplitDayParts,
   Profiles,
+  Nutrients,
+  Foods,
+  FoodNutrients,
+  MealLogs,
+  MealLogItems,
+  MealLists,
+  MealListItems,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -284,8 +376,10 @@ class AppDatabase extends _$AppDatabase {
   // 1 → 2: 筋トレ記録一式(Exercises/WorkoutSessions/WorkoutSetGroups/WorkoutSets/
   //        WorkoutSetAssists/MyTrainingLists/MyTrainingListItems)を追加。
   // 2 → 3: 基本情報・分割法(Profiles/TrainingSplits/SplitDays/SplitDayParts)を追加。
+  // 3 → 4: 食事管理(Nutrients/Foods/FoodNutrients/MealLogs/MealLogItems/
+  //        MealLists/MealListItems)を追加。
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -311,6 +405,15 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(splitDayParts);
             await m.createTable(profiles);
           }
+          if (from < 4) {
+            await m.createTable(nutrients);
+            await m.createTable(foods);
+            await m.createTable(foodNutrients);
+            await m.createTable(mealLogs);
+            await m.createTable(mealLogItems);
+            await m.createTable(mealLists);
+            await m.createTable(mealListItems);
+          }
         },
       );
 
@@ -329,6 +432,39 @@ class AppDatabase extends _$AppDatabase {
             ExercisesCompanion.insert(name: name, bodyPart: bodyPart),
         ],
       );
+    });
+  }
+
+  // 栄養素マスタ・食品マスタが空なら初期データ(food_seed.dart)を流し込む。
+  Future<void> seedFoodsIfEmpty() async {
+    final existing = await (select(foods)..limit(1)).get();
+    if (existing.isNotEmpty) return;
+
+    await transaction(() async {
+      final nutrientIdByKey = <String, int>{};
+      for (final (key, name, unit) in nutrientSeedData) {
+        nutrientIdByKey[key] = await into(nutrients).insert(
+          NutrientsCompanion.insert(key: key, name: name, unit: unit),
+        );
+      }
+      for (final f in foodSeedData) {
+        final foodId = await into(foods).insert(
+          FoodsCompanion.insert(
+            name: f.name,
+            servingLabel: f.servingLabel,
+            servingG: f.servingG,
+          ),
+        );
+        for (final entry in f.per100g.entries) {
+          await into(foodNutrients).insert(
+            FoodNutrientsCompanion.insert(
+              foodId: foodId,
+              nutrientId: nutrientIdByKey[entry.key]!,
+              amountPer100g: entry.value,
+            ),
+          );
+        }
+      }
     });
   }
 
