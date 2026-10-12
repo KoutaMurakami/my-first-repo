@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'database/app_database.dart';
+import 'screens/meal_screen.dart';
 import 'screens/my_training_list_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/weight_screen.dart';
@@ -13,6 +14,7 @@ Future<void> main() async {
   final database = AppDatabase();
   // 種目マスタが空(=初回起動)なら、初期データを流し込んでおく。
   await database.seedExercisesIfEmpty();
+  await database.seedFoodsIfEmpty();
 
   runApp(FitnessApp(database: database));
 }
@@ -84,7 +86,7 @@ class _HomeShellState extends State<HomeShell> {
       ),
       MyTrainingListScreen(database: widget.database),
       WorkoutHomeScreen(database: widget.database),
-      const _ComingSoonScreen(title: '食事'),
+      MealScreen(database: widget.database),
       WeightScreen(database: widget.database),
     ];
 

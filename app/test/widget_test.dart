@@ -11,6 +11,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fitness_app/database/app_database.dart';
 import 'package:fitness_app/main.dart';
 
+// DBの読み込みは実時間で進む非同期処理なので、pumpAndSettle だけだと
+// 結果が届く前に「落ち着いた」と判定されることがある。
+// 目的のウィジェットが現れるまで少しずつ時間を進めて待つ。
+Future<void> pumpUntilFound(WidgetTester tester, Finder finder) async {
+  for (var i = 0; i < 50; i++) {
+    if (finder.evaluate().isNotEmpty) return;
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+    await tester.pump();
+  }
+}
+
 void main() {
   testWidgets('体重を入力して記録すると一覧に表示される', (WidgetTester tester) async {
     // テスト用に、実ファイルを使わないインメモリのDBを用意する。
@@ -81,6 +92,50 @@ void main() {
 
     // 筋トレ画面に戻り、履歴に「ベンチプレス」のセッションが表示されるはず。
     expect(find.text('ベンチプレス'), findsOneWidget);
+    expect(find.text('まだ記録がありません'), findsNothing);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(milliseconds: 1));
+    await database.close();
+  });
+
+  testWidgets('食品を検索して記録すると、食事タブの一覧に表示される', (WidgetTester tester) async {
+    // 食事タブは縦に長いので、ListViewの下の方も描画されるよう画面を縦長にする。
+    tester.view.physicalSize = const Size(800, 2400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    final database = AppDatabase.forTesting();
+    await database.seedFoodsIfEmpty();
+
+    await tester.pumpWidget(FitnessApp(database: database));
+    await tester.pump();
+
+    await tester.tap(find.widgetWithText(NavigationDestination, '食事'));
+    await tester.pumpAndSettle();
+    await pumpUntilFound(tester, find.text('まだ記録がありません'));
+    expect(find.text('まだ記録がありません'), findsOneWidget);
+
+    await tester.tap(find.text('＋ 食事を記録する'));
+    await tester.pumpAndSettle();
+
+    // 「検索」タブで「納豆」を探して追加する。
+    await tester.enterText(find.widgetWithText(TextField, '食品を検索'), '納豆');
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ListTile, '納豆'));
+    await tester.pumpAndSettle();
+
+    // ドラフトに入り、記録後の残りがプレビューされる。
+    expect(find.text('この食事を記録した後の残り'), findsOneWidget);
+
+    await tester.ensureVisible(find.widgetWithText(FilledButton, '記録する'));
+    await tester.tap(find.widgetWithText(FilledButton, '記録する'));
+    // 保存→画面を閉じる、が終わって食事タブに戻るまで待つ。
+    await pumpUntilFound(tester, find.text('＋ 食事を記録する'));
+    await tester.pumpAndSettle();
+
+    // 食事タブに戻り、タイムラインに納豆が出る。
+    expect(find.text('納豆'), findsOneWidget);
     expect(find.text('まだ記録がありません'), findsNothing);
 
     await tester.pumpWidget(const SizedBox.shrink());
