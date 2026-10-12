@@ -30,6 +30,7 @@ const Map<String, (String name, String unit)> nutrientLabels = {
 class NutritionTargets {
   const NutritionTargets({
     required this.kcal,
+    required this.tdee,
     required this.p,
     required this.f,
     required this.c,
@@ -37,6 +38,9 @@ class NutritionTargets {
   });
 
   final double kcal;
+
+  // 1日の消費カロリーの予測値(メンテナンスカロリー)。ホーム画面の「消費」に使う。
+  final double tdee;
   final double p;
   final double f;
   final double c;
@@ -70,28 +74,32 @@ Future<NutritionTargets> loadTargets(AppDatabase db) async {
   double? weight = profile.weightKg;
   double? bodyFat = profile.bodyFatPct;
   if (weight == null || bodyFat == null) {
-    final latest = await (db.select(db.bodyMeasurements)
-          ..orderBy([(t) => OrderingTerm.desc(t.measuredAt)])
-          ..limit(1))
-        .getSingleOrNull();
+    final latest =
+        await (db.select(db.bodyMeasurements)
+              ..orderBy([(t) => OrderingTerm.desc(t.measuredAt)])
+              ..limit(1))
+            .getSingleOrNull();
     weight ??= latest?.weightKg;
     bodyFat ??= latest?.bodyFatPct;
   }
 
-  final result = calcNutrition(NutritionCalcInput(
-    weightKg: weight,
-    heightCm: profile.heightCm,
-    age: profile.age,
-    sex: profile.sex,
-    bodyFatPct: bodyFat,
-    activityLevel: profile.activityLevel,
-    goal: profile.goal,
-    maintenanceManual: profile.maintenanceManual,
-    maintenanceKcalManual: profile.maintenanceKcalManual,
-  ));
+  final result = calcNutrition(
+    NutritionCalcInput(
+      weightKg: weight,
+      heightCm: profile.heightCm,
+      age: profile.age,
+      sex: profile.sex,
+      bodyFatPct: bodyFat,
+      activityLevel: profile.activityLevel,
+      goal: profile.goal,
+      maintenanceManual: profile.maintenanceManual,
+      maintenanceKcalManual: profile.maintenanceKcalManual,
+    ),
+  );
 
   return NutritionTargets(
     kcal: result.kcal.toDouble(),
+    tdee: result.tdee,
     p: result.proteinG.toDouble(),
     f: result.fatG.toDouble(),
     c: result.carbG.toDouble(),

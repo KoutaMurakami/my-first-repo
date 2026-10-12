@@ -1,4 +1,5 @@
-import 'package:drift/drift.dart' show BooleanExpressionOperators, ComparableExpr, OrderingTerm;
+import 'package:drift/drift.dart'
+    show BooleanExpressionOperators, ComparableExpr, OrderingTerm;
 
 import '../database/app_database.dart';
 import 'nutrition_targets.dart';
@@ -97,9 +98,9 @@ class MealRepository {
     final nutrientRows = await db.select(db.nutrients).get();
     final keyById = {for (final n in nutrientRows) n.id: n.key};
 
-    final foodRows = await (db.select(db.foods)
-          ..orderBy([(t) => OrderingTerm.asc(t.id)]))
-        .get();
+    final foodRows = await (db.select(
+      db.foods,
+    )..orderBy([(t) => OrderingTerm.asc(t.id)])).get();
     final fnRows = await db.select(db.foodNutrients).get();
 
     final byFood = <int, NutrientAmounts>{};
@@ -170,12 +171,15 @@ class MealRepository {
     final start = DateTime(day.year, day.month, day.day);
     final end = start.add(const Duration(days: 1));
 
-    final logs = await (db.select(db.mealLogs)
-          ..where((t) =>
-              t.eatenAt.isBiggerOrEqualValue(start) &
-              t.eatenAt.isSmallerThanValue(end))
-          ..orderBy([(t) => OrderingTerm.asc(t.eatenAt)]))
-        .get();
+    final logs =
+        await (db.select(db.mealLogs)
+              ..where(
+                (t) =>
+                    t.eatenAt.isBiggerOrEqualValue(start) &
+                    t.eatenAt.isSmallerThanValue(end),
+              )
+              ..orderBy([(t) => OrderingTerm.asc(t.eatenAt)]))
+            .get();
 
     if (logs.isEmpty) {
       return const DayIntake(totals: {}, meals: []);
@@ -186,9 +190,9 @@ class MealRepository {
     final meals = <MealEntry>[];
 
     for (final log in logs) {
-      final itemRows = await (db.select(db.mealLogItems)
-            ..where((t) => t.mealLogId.equals(log.id)))
-          .get();
+      final itemRows = await (db.select(
+        db.mealLogItems,
+      )..where((t) => t.mealLogId.equals(log.id))).get();
       final views = <MealItemView>[];
       for (final item in itemRows) {
         final info = foods[item.foodId];
@@ -197,12 +201,14 @@ class MealRepository {
           totals[key] =
               (totals[key] ?? 0) + info.amountFor(key, item.quantityG);
         }
-        views.add(MealItemView(
-          name: info.food.name,
-          quantityG: item.quantityG,
-          kcal: info.amountFor('kcal', item.quantityG),
-          p: info.amountFor('p', item.quantityG),
-        ));
+        views.add(
+          MealItemView(
+            name: info.food.name,
+            quantityG: item.quantityG,
+            kcal: info.amountFor('kcal', item.quantityG),
+            p: info.amountFor('p', item.quantityG),
+          ),
+        );
       }
       meals.add(MealEntry(id: log.id, eatenAt: log.eatenAt, items: views));
     }
@@ -218,7 +224,9 @@ class MealRepository {
           .into(db.mealLogs)
           .insert(MealLogsCompanion.insert(eatenAt: eatenAt));
       for (final item in items) {
-        await db.into(db.mealLogItems).insert(
+        await db
+            .into(db.mealLogItems)
+            .insert(
               MealLogItemsCompanion.insert(
                 mealLogId: logId,
                 foodId: item.food.food.id,
@@ -231,9 +239,9 @@ class MealRepository {
 
   Future<void> deleteMeal(int mealLogId) async {
     await db.transaction(() async {
-      await (db.delete(db.mealLogItems)
-            ..where((t) => t.mealLogId.equals(mealLogId)))
-          .go();
+      await (db.delete(
+        db.mealLogItems,
+      )..where((t) => t.mealLogId.equals(mealLogId))).go();
       await (db.delete(db.mealLogs)..where((t) => t.id.equals(mealLogId))).go();
     });
   }
@@ -244,10 +252,11 @@ class MealRepository {
 
   Future<List<DraftItem>> loadMealListItems(int listId) async {
     final foods = {for (final f in await loadAllFoods()) f.food.id: f};
-    final rows = await (db.select(db.mealListItems)
-          ..where((t) => t.listId.equals(listId))
-          ..orderBy([(t) => OrderingTerm.asc(t.orderIndex)]))
-        .get();
+    final rows =
+        await (db.select(db.mealListItems)
+              ..where((t) => t.listId.equals(listId))
+              ..orderBy([(t) => OrderingTerm.asc(t.orderIndex)]))
+            .get();
     return [
       for (final r in rows)
         if (foods[r.foodId] != null)
@@ -258,10 +267,13 @@ class MealRepository {
   Future<void> saveMealList(String name, List<DraftItem> items) async {
     if (items.isEmpty) return;
     await db.transaction(() async {
-      final listId =
-          await db.into(db.mealLists).insert(MealListsCompanion.insert(name: name));
+      final listId = await db
+          .into(db.mealLists)
+          .insert(MealListsCompanion.insert(name: name));
       for (var i = 0; i < items.length; i++) {
-        await db.into(db.mealListItems).insert(
+        await db
+            .into(db.mealListItems)
+            .insert(
               MealListItemsCompanion.insert(
                 listId: listId,
                 foodId: items[i].food.food.id,

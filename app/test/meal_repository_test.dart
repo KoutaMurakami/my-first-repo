@@ -84,6 +84,7 @@ void main() {
     final foods = await repo.loadAllFoods();
     const targets = NutritionTargets(
       kcal: 2200,
+      tdee: 2500,
       p: 140,
       f: 60,
       c: 240,

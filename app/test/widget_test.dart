@@ -34,7 +34,7 @@ void main() {
     // pump() で1フレーム進めて、Stream の最初の値(空の一覧)が反映されるのを待つ。
     await tester.pump();
 
-    // ボトムナビの初期表示タブは「筋トレ」なので、まず「からだ」タブに切り替える。
+    // ボトムナビの初期表示タブは「ホーム」なので、まず「からだ」タブに切り替える。
     await tester.tap(find.widgetWithText(NavigationDestination, 'からだ'));
     await tester.pump();
 
@@ -73,7 +73,9 @@ void main() {
     await tester.pumpWidget(FitnessApp(database: database));
     await tester.pump();
 
-    // 初期表示タブは「筋トレ」。
+    // 初期表示タブは「ホーム」なので、「筋トレ」タブに切り替える。
+    await tester.tap(find.widgetWithText(NavigationDestination, '筋トレ'));
+    await tester.pump();
     await tester.tap(find.text('＋ 種目を選んで記録する'));
     await tester.pumpAndSettle();
 
@@ -137,6 +139,41 @@ void main() {
     // 食事タブに戻り、タイムラインに納豆が出る。
     expect(find.text('納豆'), findsOneWidget);
     expect(find.text('まだ記録がありません'), findsNothing);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(milliseconds: 1));
+    await database.close();
+  });
+
+  testWidgets('ホーム画面に体重の推移と今日の栄養が表示される', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(800, 2400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    final database = AppDatabase.forTesting();
+    await database.seedFoodsIfEmpty();
+    // 体重を2件(1週間前と今日)記録しておく。
+    final now = DateTime.now();
+    await database.into(database.bodyMeasurements).insert(
+          BodyMeasurementsCompanion.insert(
+            measuredAt: now.subtract(const Duration(days: 6)),
+            weightKg: 72.0,
+          ),
+        );
+    await database.into(database.bodyMeasurements).insert(
+          BodyMeasurementsCompanion.insert(measuredAt: now, weightKg: 70.5),
+        );
+
+    await tester.pumpWidget(FitnessApp(database: database));
+    await pumpUntilFound(tester, find.text('体重の推移'));
+    await pumpUntilFound(tester, find.text('今日の栄養'));
+
+    // 最新の体重と、期間内の増減(72.0 → 70.5 = −1.5kg)が出る。
+    expect(find.text('70.5'), findsOneWidget);
+    expect(find.text('−1.5kg'), findsOneWidget);
+    // 食事を何も記録していないので、摂取は0kcal。
+    expect(find.text('摂取'), findsOneWidget);
+    expect(find.text('不足を補う食事を記録'), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump(const Duration(milliseconds: 1));
