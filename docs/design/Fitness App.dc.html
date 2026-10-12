@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  body { margin: 0; background: oklch(0.93 0.008 70); font-family: 'IBM Plex Sans', 'Noto Sans JP', sans-serif; }
+  a { color: oklch(0.38 0.045 185); }
+  a:hover { color: oklch(0.33 0.045 185); }
+  input, button { font-family: inherit; }
+  input:focus { outline: 2px solid oklch(0.38 0.045 185); outline-offset: 0; }
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:22px;padding:36px 20px 56px;background:oklch(0.93 0.008 70);color:oklch(0.28 0.008 70);font-family:'IBM Plex Sans','Noto Sans JP',sans-serif;">
+
+  <div style="display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;max-width:560px;">
+    <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:oklch(0.49 0.008 70);font-weight:600;">フィットネス管理アプリ · UI提案 v1</div>
+    <div style="font-size:13px;color:oklch(0.43 0.008 70);line-height:1.6;">Material 3 / Flutter 前提。深いティールグレーを主役に、食事系だけテラコッタでレーン分け。<br />下のボタンで全画面を切り替えられます。</div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:560px;">
+    <button onClick="{{ goHome }}" style="cursor:pointer;border:1px solid oklch(0.88 0.008 70);background:oklch(0.99 0.004 70);color:oklch(0.35 0.008 70);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;">ホーム</button>
+    <button onClick="{{ goMytre }}" style="cursor:pointer;border:1px solid oklch(0.88 0.008 70);background:oklch(0.99 0.004 70);color:oklch(0.35 0.008 70);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;">マイトレ</button>
+    <button onClick="{{ goTrain }}" style="cursor:pointer;border:1px solid oklch(0.88 0.008 70);background:oklch(0.99 0.004 70);color:oklch(0.35 0.008 70);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;">筋トレ</button>
+    <button onClick="{{ goPicker }}" style="cursor:pointer;border:1px solid oklch(0.88 0.008 70);background:oklch(0.99 0.004 70);color:oklch(0.35 0.008 70);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;">種目選択</button>
+    <button onClick="{{ goSession }}" style="cursor:pointer;border:1px solid oklch(0.88 0.008 70);background:oklch(0.99 0.004 70);color:oklch(0.35 0.008 70);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;">セット記録</button>
+    <button onClick="{{ goMeal }}" style="cursor:pointer;border:1px solid oklch(0.88 0.008 70);background:oklch(0.99 0.004 70);color:oklch(0.35 0.008 70);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;">食事</button>
+    <button onClick="{{ goMealAdd }}" style="cursor:pointer;border:1px solid oklch(0.88 0.008 70);background:oklch(0.99 0.004 70);color:oklch(0.35 0.008 70);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;">食品検索</button>
+    <button onClick="{{ goBody }}" style="cursor:pointer;border:1px solid oklch(0.88 0.008 70);background:oklch(0.99 0.004 70);color:oklch(0.35 0.008 70);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;">からだ（体重記録）</button>
+    <button onClick="{{ goPhotos }}" style="cursor:pointer;border:1px solid oklch(0.88 0.008 70);background:oklch(0.99 0.004 70);color:oklch(0.35 0.008 70);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;">進捗写真</button>
+    <button onClick="{{ goLogin }}" style="cursor:pointer;border:1px solid oklch(0.88 0.008 70);background:oklch(0.99 0.004 70);color:oklch(0.35 0.008 70);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;">ログイン</button>
+    <button onClick="{{ goSettings }}" style="cursor:pointer;border:1px solid oklch(0.88 0.008 70);background:oklch(0.99 0.004 70);color:oklch(0.35 0.008 70);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;">基本情報（設定）</button>
+  </div>
+
+  <div style="position:relative;width:390px;height:844px;border-radius:44px;background:oklch(0.972 0.004 70);box-shadow:0 0 0 9px oklch(0.22 0.008 70), 0 30px 70px -22px rgba(0,0,0,0.45);overflow:hidden;display:flex;flex-direction:column;">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 26px 4px;font-size:12px;font-weight:600;flex:none;color:oklch(0.3 0.008 70);">
+      <div>9:41</div>
+      <div style="display:flex;gap:5px;align-items:center;">
+        <div style="width:15px;height:9px;border-radius:2px;border:1px solid oklch(0.45 0.008 70);"></div>
+        <div style="width:21px;height:10px;border-radius:3px;background:oklch(0.45 0.008 70);"></div>
+      </div>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;">
+
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:16px;padding:12px 20px 108px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+            <div style="display:flex;flex-direction:column;gap:3px;">
+              <div style="font-size:11px;letter-spacing:0.12em;color:oklch(0.49 0.008 70);font-weight:600;">2026年9月11日 (金)</div>
+              <div style="font-size:24px;font-weight:700;letter-spacing:-0.01em;">今日の記録</div>
+            </div>
+            <button onClick="{{ goSettings }}" aria-label="基本情報" style="cursor:pointer;width:40px;height:40px;border-radius:50%;background:oklch(0.9 0.008 70);border:none;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:oklch(0.35 0.008 70);">設定</button>
+          </div>
+
+          <button onClick="{{ goBody }}" style="cursor:pointer;text-align:left;width:100%;display:flex;flex-direction:column;gap:8px;padding:14px 16px;border-radius:18px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);color:inherit;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;">
+              <div style="font-size:14px;font-weight:700;">体重の推移</div>
+              <div style="display:flex;gap:2px;padding:3px;border-radius:999px;background:oklch(0.95 0.006 70);">
+                <sc-for list="{{ periods }}" as="pd" hint-placeholder-count="3">
+                  <div onClick="{{ pd.select }}" style="font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;background:{{ pd.bg }};color:{{ pd.fg }};">{{ pd.label }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:baseline;gap:4px;">
+                <div style="font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;line-height:1;">{{ curWeight }}</div>
+                <div style="font-size:14px;font-weight:600;color:oklch(0.49 0.008 70);">kg</div>
+              </div>
+              <div style="font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;background:oklch(0.955 0.014 185);color:oklch(0.34 0.045 185);font-variant-numeric:tabular-nums;">{{ wDelta }}</div>
+            </div>
+            <div style="position:relative;width:100%;height:62px;">
+              <svg viewBox="0 0 300 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;">
+                <line x1="0" y1="50" x2="300" y2="50" stroke="oklch(0.92 0.006 70)" strokeWidth="1" vectorEffect="non-scaling-stroke"></line>
+                <polygon points="{{ wArea }}" fill="oklch(0.94 0.018 185)"></polygon>
+                <polyline points="{{ wPoints }}" fill="none" stroke="oklch(0.38 0.045 185)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke"></polyline>
+              </svg>
+              <div style="position:absolute;right:-4px;top:{{ wDotTop }};width:10px;height:10px;margin-top:-5px;border-radius:50%;background:oklch(0.38 0.045 185);border:2px solid oklch(0.993 0.003 80);box-sizing:border-box;"></div>
+              <div style="position:absolute;left:0;top:-2px;font-size:10px;font-variant-numeric:tabular-nums;color:oklch(0.49 0.008 70);">{{ wMax }}</div>
+              <div style="position:absolute;left:0;bottom:-2px;font-size:10px;font-variant-numeric:tabular-nums;color:oklch(0.49 0.008 70);">{{ wMin }}</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;width:100%;font-size:11px;color:oklch(0.49 0.008 70);">
+              <div>{{ wStart }}</div>
+              <div>目標 {{ targetW }}kg まで あと {{ toGoal }}kg</div>
+              <div>今日</div>
+            </div>
+          </button>
+
+          <div style="display:flex;flex-direction:column;gap:16px;padding:18px;border-radius:20px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <div style="font-size:14px;font-weight:700;">今日の栄養</div>
+              <div style="font-size:11px;color:oklch(0.49 0.008 70);">目標まであと</div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:8px;">
+              <div style="display:flex;flex-direction:column;gap:2px;padding:11px 12px;border-radius:12px;background:oklch(0.97 0.004 70);">
+                <div style="font-size:10px;font-weight:700;color:oklch(0.44 0.07 50);">摂取</div>
+                <div style="font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;">{{ kcalIn }}</div>
+                <div style="font-size:10px;color:oklch(0.49 0.008 70);">/ {{ kcalTarget }} kcal</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px;padding:11px 12px;border-radius:12px;background:oklch(0.97 0.004 70);">
+                <div style="font-size:10px;font-weight:700;color:oklch(0.34 0.045 185);">消費</div>
+                <div style="font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;">{{ kcalBurn }}</div>
+                <div style="font-size:10px;color:oklch(0.49 0.008 70);">kcal · 予測</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px;padding:11px 12px;border-radius:12px;background:oklch(0.97 0.004 70);">
+                <div style="font-size:10px;font-weight:700;color:oklch(0.35 0.008 70);">残り</div>
+                <div style="font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;">{{ kcalLeft }}</div>
+                <div style="font-size:10px;color:oklch(0.49 0.008 70);">kcal</div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <sc-for list="{{ pfcRows }}" as="pr" hint-placeholder-count="3">
+                <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <div style="width:8px;height:8px;border-radius:2px;background:{{ pr.color }};"></div>
+                      <div style="font-size:13px;font-weight:600;">{{ pr.name }}</div>
+                    </div>
+                    <div style="display:flex;align-items:baseline;gap:8px;">
+                      <div style="font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;color:{{ pr.leftColor }};">{{ pr.left }}</div>
+                      <div style="font-size:11px;font-variant-numeric:tabular-nums;color:oklch(0.49 0.008 70);">{{ pr.frac }}</div>
+                    </div>
+                  </div>
+                  <div style="height:6px;border-radius:999px;background:oklch(0.94 0.008 70);overflow:hidden;"><div style="width:{{ pr.pct }};height:100%;border-radius:999px;background:{{ pr.color }};"></div></div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px;padding-top:14px;border-top:1px solid oklch(0.93 0.008 70);">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                <div style="font-size:13px;font-weight:700;">不足している栄養素</div>
+                <div style="font-size:11px;color:oklch(0.49 0.008 70);">{{ microCaption }}</div>
+              </div>
+              <sc-for list="{{ microRows }}" as="mr" hint-placeholder-count="4">
+                <div style="display:grid;grid-template-columns:84px minmax(0,1fr) 86px;align-items:center;gap:10px;margin-bottom:8px;">
+                  <div style="font-size:12px;font-weight:600;">{{ mr.name }}</div>
+                  <div style="height:5px;border-radius:999px;background:oklch(0.94 0.008 70);overflow:hidden;"><div style="width:{{ mr.pct }};height:100%;border-radius:999px;background:{{ mr.color }};"></div></div>
+                  <div style="font-size:12px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums;color:{{ mr.leftColor }};">{{ mr.left }}</div>
+                </div>
+              </sc-for>
+              <button onClick="{{ toggleMicros }}" style="cursor:pointer;align-self:flex-start;border:none;background:none;padding:2px 0;font-size:12px;font-weight:700;color:oklch(0.36 0.045 185);">{{ microToggleLabel }}</button>
+            </div>
+
+            <button onClick="{{ goMealAdd }}" style="cursor:pointer;width:100%;padding:13px;border-radius:12px;border:none;background:oklch(0.5 0.07 50);color:#fff;font-size:14px;font-weight:700;" style-hover="background:oklch(0.44 0.07 50);">不足を補う食事を記録</button>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:20px;background:oklch(0.3 0.03 185);color:oklch(0.97 0.006 185);">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="font-size:14px;font-weight:700;">AIアドバイス</div>
+                <div style="font-size:10px;font-weight:700;padding:3px 7px;border-radius:6px;background:rgba(255,255,255,0.16);">β</div>
+              </div>
+              <div style="font-size:11px;opacity:0.75;">今日の記録から</div>
+            </div>
+            <div style="font-size:14px;line-height:1.75;text-wrap:pretty;">{{ aiAdvice }}</div>
+            <div style="display:flex;gap:8px;">
+              <button style="cursor:pointer;flex:1;border:none;padding:11px;border-radius:10px;background:oklch(0.97 0.006 185);color:oklch(0.3 0.03 185);font-size:13px;font-weight:700;">詳しく聞く</button>
+              <button onClick="{{ nextAdvice }}" style="cursor:pointer;flex:none;padding:11px 14px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.3);color:inherit;font-size:13px;font-weight:600;">別の提案</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isMytre }}">
+        <div style="display:flex;flex-direction:column;gap:14px;padding:12px 20px 108px;">
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="font-size:24px;font-weight:700;letter-spacing:-0.01em;">マイトレ</div>
+            <div style="font-size:12px;color:oklch(0.49 0.008 70);">よく使うメニューを保存して、ワンタップで開始。「編集」で種目ごとのセット方式を選べます</div>
+          </div>
+          <sc-for list="{{ routines }}" as="r" hint-placeholder-count="3">
+            <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:18px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+                <div style="display:flex;flex-direction:column;gap:3px;min-width:0;">
+                  <div style="font-size:17px;font-weight:700;">{{ r.name }}</div>
+                  <div style="font-size:11px;color:oklch(0.49 0.008 70);">{{ r.meta }}</div>
+                </div>
+                <div style="font-size:11px;font-weight:600;flex:none;color:oklch(0.49 0.008 70);">前回 {{ r.last }}</div>
+              </div>
+              <div style="display:flex;flex-direction:column;">
+                <sc-for list="{{ r.items }}" as="it" hint-placeholder-count="4">
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:9px 0;border-top:1px solid oklch(0.94 0.008 70);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;">
+                      <div style="min-width:0;">{{ it.name }}</div>
+                      <div style="display:flex;align-items:center;gap:8px;flex:none;">
+                        <div style="font-size:10px;font-weight:700;padding:3px 7px;border-radius:6px;background:{{ it.typeBg }};color:{{ it.typeFg }};">{{ it.type }}</div>
+                        <div style="font-variant-numeric:tabular-nums;font-size:12px;color:oklch(0.49 0.008 70);">{{ it.plan }}</div>
+                      </div>
+                    </div>
+                    <sc-if value="{{ it.editing }}">
+                      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                        <sc-for list="{{ it.options }}" as="op" hint-placeholder-count="5">
+                          <button onClick="{{ op.pick }}" style="cursor:pointer;font-size:11px;font-weight:700;padding:6px 10px;border-radius:999px;border:1px solid {{ op.border }};background:{{ op.bg }};color:{{ op.fg }};margin-right:6px;">{{ op.label }}</button>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onClick="{{ goSession }}" style="cursor:pointer;flex:1;border:none;padding:12px;border-radius:12px;background:oklch(0.38 0.045 185);color:#fff;font-size:14px;font-weight:700;" style-hover="background:oklch(0.31 0.045 185);">開始</button>
+                <button onClick="{{ r.toggleEdit }}" style="cursor:pointer;flex:none;padding:12px 18px;border-radius:12px;background:{{ r.editBg }};border:1px solid oklch(0.86 0.008 70);color:{{ r.editFg }};font-size:14px;font-weight:600;">{{ r.editLabel }}</button>
+              </div>
+            </div>
+          </sc-for>
+          <button onClick="{{ goPicker }}" style="cursor:pointer;width:100%;padding:14px;border-radius:14px;background:transparent;border:1px dashed oklch(0.78 0.008 70);color:oklch(0.45 0.008 70);font-size:14px;font-weight:600;" style-hover="border-color:oklch(0.38 0.045 185);color:oklch(0.36 0.045 185);">＋ 新しいリストを作成</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isTrain }}">
+        <div style="display:flex;flex-direction:column;gap:16px;padding:12px 20px 108px;">
+          <div style="font-size:24px;font-weight:700;letter-spacing:-0.01em;">筋トレ</div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:18px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <div style="display:flex;flex-direction:column;gap:2px;">
+                <div style="font-size:14px;font-weight:700;">分割法 · {{ splitName }}</div>
+                <div style="font-size:11px;color:oklch(0.49 0.008 70);">今日は Day {{ todayDayNum }}：{{ todayDayLabel }}</div>
+              </div>
+              <button onClick="{{ toggleSplitPanel }}" style="cursor:pointer;flex:none;padding:7px 12px;border-radius:999px;border:1px solid oklch(0.86 0.008 70);background:transparent;color:oklch(0.38 0.008 70);font-size:12px;font-weight:700;">{{ splitPanelLabel }}</button>
+            </div>
+            <sc-if value="{{ splitPanelOpen }}">
+              <div style="display:flex;flex-direction:column;gap:12px;padding-top:12px;border-top:1px solid oklch(0.93 0.008 70);">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">分割法</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <sc-for list="{{ splitOpts }}" as="sp" hint-placeholder-count="6">
+                  <button onClick="{{ sp.pick }}" style="cursor:pointer;font-size:12px;font-weight:700;padding:8px 12px;border-radius:999px;border:1px solid {{ sp.border }};background:{{ sp.bg }};color:{{ sp.fg }};margin-right:6px;">{{ sp.label }}</button>
+                </sc-for>
+              </div>
+              <div style="font-size:11px;line-height:1.6;color:oklch(0.49 0.008 70);">{{ splitDesc }}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <sc-for list="{{ splitDays }}" as="sd" hint-placeholder-count="3">
+                <div style="display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:12px;background:oklch(0.97 0.004 70);margin-bottom:8px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <div style="display:flex;align-items:baseline;gap:8px;min-width:0;">
+                      <div style="font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;color:oklch(0.49 0.008 70);">Day {{ sd.num }}</div>
+                      <div style="font-size:13px;font-weight:700;">{{ sd.label }}</div>
+                    </div>
+                    <button onClick="{{ sd.toggleEdit }}" style="cursor:pointer;flex:none;border:none;background:none;padding:4px 2px;font-size:12px;font-weight:700;color:oklch(0.36 0.045 185);">{{ sd.editLabel }}</button>
+                  </div>
+                  <sc-if value="{{ sd.editing }}">
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                      <div style="font-size:10px;font-weight:600;color:oklch(0.49 0.008 70);">この日に鍛える部位（複数選択）</div>
+                      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                        <sc-for list="{{ sd.partOpts }}" as="po" hint-placeholder-count="8">
+                          <button onClick="{{ po.pick }}" style="cursor:pointer;font-size:11px;font-weight:700;padding:6px 10px;border-radius:999px;border:1px solid {{ po.border }};background:{{ po.bg }};color:{{ po.fg }};margin-right:6px;">{{ po.label }}</button>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+              <sc-if value="{{ splitIsCustom }}">
+                <div style="display:flex;gap:8px;">
+                  <button onClick="{{ addSplitDay }}" style="cursor:pointer;flex:1;padding:10px;border-radius:10px;border:1px dashed oklch(0.78 0.008 70);background:transparent;color:oklch(0.42 0.008 70);font-size:12px;font-weight:600;">＋ 日を追加</button>
+                  <button onClick="{{ removeSplitDay }}" style="cursor:pointer;flex:1;padding:10px;border-radius:10px;border:1px dashed oklch(0.78 0.008 70);background:transparent;color:oklch(0.42 0.008 70);font-size:12px;font-weight:600;">− 最後の日を削除</button>
+                </div>
+              </sc-if>
+            </div>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:20px;background:oklch(0.3 0.03 185);color:oklch(0.97 0.006 185);">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="font-size:14px;font-weight:700;">AIメニュー提案</div>
+                <div style="font-size:10px;font-weight:700;padding:3px 7px;border-radius:6px;background:rgba(255,255,255,0.16);">β</div>
+              </div>
+              <button onClick="{{ goSettings }}" style="cursor:pointer;border:none;background:rgba(255,255,255,0.14);color:inherit;font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;">{{ aiProfileLabel }}</button>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <sc-for list="{{ focusOpts }}" as="fo" hint-placeholder-count="3">
+                <button onClick="{{ fo.pick }}" style="cursor:pointer;flex:none;font-size:12px;font-weight:700;padding:7px 12px;border-radius:999px;border:1px solid {{ fo.border }};background:{{ fo.bg }};color:{{ fo.fg }};margin-right:6px;">{{ fo.label }}</button>
+              </sc-for>
+            </div>
+            <div style="font-size:12px;line-height:1.7;opacity:0.9;text-wrap:pretty;">{{ aiReason }}</div>
+            <div style="display:flex;flex-direction:column;border-radius:12px;background:rgba(255,255,255,0.07);padding:4px 12px;">
+              <sc-for list="{{ aiMenu }}" as="am" hint-placeholder-count="4">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.1);">
+                  <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
+                    <div style="font-size:13px;font-weight:600;">{{ am.name }}</div>
+                    <div style="font-size:10px;opacity:0.72;">{{ am.type }}セット</div>
+                  </div>
+                  <div style="font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;flex:none;">{{ am.plan }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button onClick="{{ goSession }}" style="cursor:pointer;flex:1;border:none;padding:11px;border-radius:10px;background:oklch(0.97 0.006 185);color:oklch(0.3 0.03 185);font-size:13px;font-weight:700;">このメニューで開始</button>
+              <button onClick="{{ saveAiMenu }}" style="cursor:pointer;flex:1;padding:11px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.3);color:inherit;font-size:13px;font-weight:600;">{{ saveAiLabel }}</button>
+            </div>
+            <button onClick="{{ nextAiMenu }}" style="cursor:pointer;align-self:center;border:none;background:none;color:inherit;opacity:0.8;font-size:12px;font-weight:600;padding:2px;">別の提案を見る</button>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-if value="{{ paused }}">
+              <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:16px;background:oklch(0.955 0.014 185);border:1px solid oklch(0.88 0.02 185);">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;">
+                  <div style="font-size:14px;font-weight:700;color:oklch(0.3 0.045 185);">中断中：プッシュ A</div>
+                  <div style="font-size:12px;font-weight:600;color:oklch(0.34 0.045 185);">{{ doneCount }} / {{ totalSets }} セット記録済み</div>
+                </div>
+                <div style="font-size:12px;color:oklch(0.36 0.03 185);">中断までの記録は保存されています</div>
+                <div style="display:flex;gap:8px;">
+                  <button onClick="{{ goSession }}" style="cursor:pointer;flex:1;border:none;padding:11px;border-radius:10px;background:oklch(0.38 0.045 185);color:#fff;font-size:13px;font-weight:700;">再開する</button>
+                  <button onClick="{{ finishSession }}" style="cursor:pointer;flex:1;padding:11px;border-radius:10px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.86 0.008 70);color:oklch(0.35 0.008 70);font-size:13px;font-weight:600;">ここまでで終了</button>
+                </div>
+              </div>
+            </sc-if>
+            <button onClick="{{ goMytre }}" style="cursor:pointer;width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 16px;border-radius:16px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);text-align:left;color:inherit;" style-hover="border-color:oklch(0.38 0.045 185);">
+              <div style="display:flex;flex-direction:column;gap:3px;">
+                <div style="font-size:15px;font-weight:600;">マイトレから開始</div>
+                <div style="font-size:11px;color:oklch(0.49 0.008 70);">保存したメニュー {{ rtCount }}件</div>
+              </div>
+              <div style="font-size:16px;color:oklch(0.49 0.008 70);">→</div>
+            </button>
+            <button onClick="{{ goPicker }}" style="cursor:pointer;width:100%;padding:14px;border-radius:14px;background:transparent;border:1px dashed oklch(0.78 0.008 70);color:oklch(0.45 0.008 70);font-size:14px;font-weight:600;" style-hover="border-color:oklch(0.38 0.045 185);color:oklch(0.36 0.045 185);">＋ 種目を選んで記録する</button>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;">
+              <div style="font-size:14px;font-weight:700;">トレーニング履歴</div>
+              <div style="font-size:11px;color:oklch(0.49 0.008 70);">総セット数 · 消費kcal</div>
+            </div>
+            <sc-for list="{{ history }}" as="h" hint-placeholder-count="4">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-radius:14px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);margin-bottom:8px;">
+                <div style="display:flex;flex-direction:column;gap:3px;min-width:0;">
+                  <div style="font-size:14px;font-weight:600;">{{ h.name }}</div>
+                  <div style="font-size:11px;color:oklch(0.49 0.008 70);">{{ h.date }} · {{ h.meta }}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:none;">
+                  <div style="font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;">{{ h.sets }}</div>
+                  <div style="font-size:11px;font-variant-numeric:tabular-nums;color:oklch(0.44 0.07 50);font-weight:600;">{{ h.kcal }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPicker }}">
+        <div style="display:flex;flex-direction:column;gap:14px;padding:12px 20px 108px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button onClick="{{ goTrain }}" style="cursor:pointer;border:none;background:none;padding:0;font-size:14px;color:oklch(0.43 0.008 70);">←</button>
+            <div style="font-size:20px;font-weight:700;">種目を選ぶ</div>
+          </div>
+
+          <input value="{{ exQuery }}" onChange="{{ onExQuery }}" placeholder="種目名で検索" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:12px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.993 0.003 80);font-size:14px;color:oklch(0.28 0.008 70);" />
+
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <sc-for list="{{ parts }}" as="p" hint-placeholder-count="6">
+              <button onClick="{{ p.select }}" style="cursor:pointer;flex:none;font-size:12px;font-weight:600;padding:8px 13px;border-radius:999px;border:1px solid {{ p.border }};background:{{ p.bg }};color:{{ p.fg }};margin-right:6px;">{{ p.label }}</button>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;flex-direction:column;">
+            <sc-for list="{{ filteredExercises }}" as="e" hint-placeholder-count="6">
+              <button onClick="{{ goSession }}" style="cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-radius:14px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);margin-bottom:8px;width:100%;" style-hover="border-color:oklch(0.38 0.045 185);">
+                <div style="display:flex;flex-direction:column;gap:3px;min-width:0;">
+                  <div style="font-size:14px;font-weight:600;color:oklch(0.28 0.008 70);">{{ e.name }}</div>
+                  <div style="font-size:11px;color:oklch(0.49 0.008 70);">{{ e.part }} · 前回 {{ e.last }}</div>
+                </div>
+                <div style="font-size:18px;color:oklch(0.55 0.008 70);flex:none;">＋</div>
+              </button>
+            </sc-for>
+          </div>
+
+          <button onClick="{{ goSession }}" style="cursor:pointer;width:100%;padding:14px;border-radius:14px;background:transparent;border:1px dashed oklch(0.78 0.008 70);color:oklch(0.45 0.008 70);font-size:14px;font-weight:600;" style-hover="border-color:oklch(0.38 0.045 185);color:oklch(0.36 0.045 185);">リストにない種目を手入力する</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSession }}">
+        <div style="display:flex;flex-direction:column;gap:14px;padding:12px 20px 108px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <button onClick="{{ interruptSession }}" style="cursor:pointer;border:none;background:none;padding:0;font-size:14px;color:oklch(0.43 0.008 70);">← 中断して保存</button>
+            <div style="display:flex;align-items:center;gap:7px;">
+              <div style="width:7px;height:7px;border-radius:50%;background:oklch(0.38 0.045 185);"></div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:oklch(0.36 0.045 185);">記録中</div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;">
+            <div style="display:flex;flex-direction:column;gap:2px;">
+              <div style="font-size:20px;font-weight:700;">プッシュ A</div>
+              <div style="font-size:12px;color:oklch(0.49 0.008 70);">{{ doneCount }} / {{ totalSets }} セット完了 · 自動保存</div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
+              <div style="font-size:13px;font-weight:700;">レストタイマーを使う</div>
+              <div style="font-size:11px;color:oklch(0.49 0.008 70);">オンにすると各セットの横に「休憩」ボタンを表示（{{ restSecLabel }}）</div>
+            </div>
+            <button onClick="{{ toggleRestOn }}" aria-label="レストタイマー切替" style="cursor:pointer;flex:none;width:48px;height:28px;border-radius:999px;border:none;padding:3px;display:flex;justify-content:{{ switchJustify }};background:{{ switchBg }};">
+              <div style="width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.2);"></div>
+            </button>
+          </div>
+
+          <sc-if value="{{ resting }}">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-radius:14px;background:oklch(0.955 0.014 185);border:1px solid oklch(0.9 0.014 185);">
+              <div style="font-size:13px;font-weight:700;color:oklch(0.34 0.045 185);">レストタイマー</div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;color:oklch(0.34 0.045 185);">{{ restLabel }}</div>
+                <button onClick="{{ skipRest }}" style="cursor:pointer;border:none;background:oklch(0.34 0.045 185);color:#fff;font-size:11px;font-weight:700;padding:6px 11px;border-radius:999px;">スキップ</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-for list="{{ exercises }}" as="ex" hint-placeholder-count="2">
+            <div style="display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:18px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+                <div style="display:flex;flex-direction:column;gap:3px;min-width:0;">
+                  <div style="font-size:16px;font-weight:700;">{{ ex.name }}</div>
+                  <div style="font-size:11px;color:oklch(0.49 0.008 70);">{{ ex.part }}</div>
+                </div>
+                <button onClick="{{ ex.toggleType }}" style="cursor:pointer;flex:none;display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;border:1px solid {{ ex.typeBorder }};background:{{ ex.typeBg }};color:{{ ex.typeFg }};white-space:nowrap;">{{ ex.typeLabel }} <span style="font-size:9px;">▼</span></button>
+              </div>
+              <sc-if value="{{ ex.typeOpen }}">
+                <div style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;background:oklch(0.97 0.004 70);">
+                  <div style="font-size:11px;font-weight:700;color:oklch(0.49 0.008 70);">セット方式を選ぶ</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                    <sc-for list="{{ ex.options }}" as="op" hint-placeholder-count="5">
+                      <button onClick="{{ op.pick }}" style="cursor:pointer;font-size:12px;font-weight:700;padding:7px 11px;border-radius:999px;border:1px solid {{ op.border }};background:{{ op.bg }};color:{{ op.fg }};margin-right:6px;">{{ op.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <div style="display:grid;grid-template-columns:{{ setGrid }};gap:6px;align-items:center;font-size:10px;font-weight:600;color:oklch(0.53 0.008 70);">
+                <div>#</div><div style="text-align:center;">{{ unitLabel }}</div><div style="text-align:center;">回数</div><div>前回</div><div style="text-align:center;">完了</div><sc-if value="{{ restOn }}"><div style="text-align:center;">休憩</div></sc-if>
+              </div>
+
+              <sc-for list="{{ ex.sets }}" as="st" hint-placeholder-count="3">
+                <div style="display:flex;flex-direction:column;border-top:1px solid oklch(0.94 0.008 70);">
+                <div style="display:grid;grid-template-columns:{{ setGrid }};gap:6px;align-items:center;padding:9px 0;">
+                  <button onClick="{{ st.toggleAssist }}" aria-label="補助・メモを記録" style="cursor:pointer;align-self:stretch;min-height:36px;border:none;border-radius:6px;padding:0;background:{{ st.numBg }};color:{{ st.numFg }};font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">{{ st.num }}<span style="font-size:8px;line-height:1;">▾</span></button>
+                  <input type="text" inputMode="decimal" value="{{ st.wVal }}" onChange="{{ st.onWeight }}" style="width:100%;min-width:0;box-sizing:border-box;padding:8px 2px;border-radius:8px;border:1px solid oklch(0.9 0.008 75);background:oklch(0.97 0.004 70);font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;text-align:center;color:oklch(0.24 0.008 70);" />
+                  <input type="text" inputMode="numeric" value="{{ st.rVal }}" onChange="{{ st.onReps }}" style="width:100%;min-width:0;box-sizing:border-box;padding:8px 2px;border-radius:8px;border:1px solid oklch(0.9 0.008 75);background:oklch(0.97 0.004 70);font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;text-align:center;color:oklch(0.24 0.008 70);" />
+                  <div style="font-size:11px;color:{{ st.diffColor }};font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ st.prev }}</div>
+                  <sc-if value="{{ st.done }}">
+                    <button onClick="{{ st.toggle }}" aria-label="完了を取り消す" style="cursor:pointer;border:1px solid oklch(0.38 0.045 185);padding:7px 0;border-radius:9px;background:oklch(0.38 0.045 185);color:#fff;font-size:14px;font-weight:700;">✓</button>
+                  </sc-if>
+                  <sc-if value="{{ st.todo }}">
+                    <button onClick="{{ st.toggle }}" style="cursor:pointer;border:1px solid oklch(0.86 0.008 70);padding:7px 0;border-radius:9px;background:oklch(0.993 0.003 80);color:oklch(0.45 0.008 70);font-size:14px;font-weight:700;" style-hover="border-color:oklch(0.38 0.045 185);color:oklch(0.36 0.045 185);" aria-label="セットを完了にする">✓</button>
+                  </sc-if>
+                  <sc-if value="{{ restOn }}">
+                    <button onClick="{{ st.startRest }}" style="cursor:pointer;padding:7px 0;border-radius:9px;border:1px solid {{ st.restBorder }};background:{{ st.restBg }};color:{{ st.restFg }};font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;">{{ st.restText }}</button>
+                  </sc-if>
+                </div>
+                <sc-if value="{{ st.hasAssistBadge }}">
+                  <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:0 0 9px 28px;">
+                    <div style="font-size:10px;font-weight:700;padding:3px 7px;border-radius:6px;background:oklch(0.96 0.018 50);color:oklch(0.42 0.06 50);">{{ st.assistBadge }}</div>
+                    <sc-if value="{{ st.hasMemo }}"><div style="font-size:11px;color:oklch(0.49 0.008 70);">{{ st.memo }}</div></sc-if>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ st.assistOpen }}">
+                  <div style="display:flex;flex-direction:column;gap:12px;margin:0 0 10px;padding:12px;border-radius:12px;background:oklch(0.975 0.012 50);border:1px solid oklch(0.93 0.018 50);">
+                    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                      <div style="font-size:12px;font-weight:700;color:oklch(0.38 0.05 50);">セット {{ st.num }} の詳細</div>
+                      <div style="font-size:10px;color:oklch(0.49 0.008 70);">フォーストレップ（補助レップ）</div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:4px;padding:3px;border-radius:9px;background:oklch(0.94 0.012 50);">
+                      <sc-for list="{{ st.scopeOpts }}" as="so" hint-placeholder-count="2">
+                        <button onClick="{{ so.pick }}" style="cursor:pointer;border:none;padding:8px 4px;border-radius:7px;background:{{ so.bg }};color:{{ so.fg }};font-size:12px;font-weight:700;">{{ so.label }}</button>
+                      </sc-for>
+                    </div>
+                    <sc-if value="{{ st.isPartial }}">
+                      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                        <div style="display:flex;flex-direction:column;gap:2px;">
+                          <div style="font-size:12px;font-weight:700;">補助してもらった回数</div>
+                          <div style="font-size:10px;font-variant-numeric:tabular-nums;color:oklch(0.49 0.008 70);">自力 {{ st.rVal }}回 ＋ 補助 {{ st.assistN }}回 = 計 {{ st.totalReps }}回</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;flex:none;">
+                          <button onClick="{{ st.assistDec }}" aria-label="減らす" style="cursor:pointer;width:36px;height:36px;border-radius:10px;border:1px solid oklch(0.86 0.012 50);background:oklch(0.993 0.003 80);font-size:16px;font-weight:700;color:oklch(0.38 0.008 70);">−</button>
+                          <div style="width:28px;text-align:center;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;">{{ st.assistN }}</div>
+                          <button onClick="{{ st.assistInc }}" aria-label="増やす" style="cursor:pointer;width:36px;height:36px;border-radius:10px;border:1px solid oklch(0.86 0.012 50);background:oklch(0.993 0.003 80);font-size:16px;font-weight:700;color:oklch(0.38 0.008 70);">＋</button>
+                        </div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ st.isFull }}">
+                      <div style="font-size:11px;line-height:1.6;color:oklch(0.4 0.04 50);">このセットの {{ st.rVal }}回 すべてを補助ありとして記録します（自己ベスト・前回比較の対象から除外）。</div>
+                    </sc-if>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                      <div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">補助者</div>
+                      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                        <sc-for list="{{ st.byOpts }}" as="bo" hint-placeholder-count="3">
+                          <button onClick="{{ bo.pick }}" style="cursor:pointer;font-size:11px;font-weight:700;padding:6px 10px;border-radius:999px;border:1px solid {{ bo.border }};background:{{ bo.bg }};color:{{ bo.fg }};margin-right:6px;">{{ bo.label }}</button>
+                        </sc-for>
+                      </div>
+                    </div>
+                    <input value="{{ st.memo }}" onChange="{{ st.onMemo }}" placeholder="メモ（例: 最後2回は胸の上で止まった）" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid oklch(0.9 0.012 50);background:oklch(0.993 0.003 80);font-size:13px;color:oklch(0.26 0.008 70);" />
+                    <div style="display:flex;gap:8px;">
+                      <button onClick="{{ st.clearAssist }}" style="cursor:pointer;flex:1;padding:10px;border-radius:10px;border:1px solid oklch(0.86 0.008 70);background:transparent;color:oklch(0.42 0.008 70);font-size:12px;font-weight:600;">補助なしに戻す</button>
+                      <button onClick="{{ st.toggleAssist }}" style="cursor:pointer;flex:1;padding:10px;border-radius:10px;border:none;background:oklch(0.5 0.07 50);color:#fff;font-size:12px;font-weight:700;">閉じる</button>
+                    </div>
+                  </div>
+                </sc-if>
+                </div>
+              </sc-for>
+              <div style="font-size:10px;color:oklch(0.49 0.008 70);">セット番号をタップすると、補助レップ（フォーストレップ）やメモを記録できます</div>
+
+              <sc-if value="{{ ex.hasNote }}">
+                <div style="padding:10px 12px;border-radius:10px;background:oklch(0.975 0.012 50);font-size:11px;line-height:1.6;color:oklch(0.4 0.04 50);">{{ ex.typeNote }}</div>
+              </sc-if>
+
+              <button onClick="{{ ex.addSet }}" style="cursor:pointer;width:100%;padding:10px;border-radius:10px;background:oklch(0.97 0.004 70);border:none;color:oklch(0.48 0.008 70);font-size:12px;font-weight:600;" style-hover="background:oklch(0.94 0.008 70);">＋ セットを追加</button>
+            </div>
+          </sc-for>
+
+          <button onClick="{{ finishSession }}" style="cursor:pointer;width:100%;padding:15px;border-radius:14px;background:oklch(0.38 0.045 185);border:none;color:#fff;font-size:15px;font-weight:700;" style-hover="background:oklch(0.31 0.045 185);">トレーニングを終了</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isMeal }}">
+        <div style="display:flex;flex-direction:column;gap:16px;padding:12px 20px 108px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:24px;font-weight:700;letter-spacing:-0.01em;">食事</div>
+            <div style="font-size:12px;font-weight:600;color:oklch(0.43 0.008 70);padding:7px 12px;border-radius:999px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">9/11 (金)</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px;padding:18px;border-radius:20px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <div style="display:flex;align-items:baseline;gap:6px;">
+                <div style="font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;">1,420</div>
+                <div style="font-size:12px;color:oklch(0.49 0.008 70);">/ 2,200 kcal</div>
+              </div>
+              <div style="font-size:12px;font-weight:700;color:oklch(0.44 0.07 50);">残り 780</div>
+            </div>
+            <div style="height:8px;border-radius:999px;background:oklch(0.94 0.008 70);overflow:hidden;">
+              <div style="width:64%;height:100%;background:oklch(0.5 0.07 50);"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:12px;">
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="font-weight:600;">P</span><span style="color:oklch(0.49 0.008 70);font-variant-numeric:tabular-nums;">98/140g</span></div>
+                <div style="height:5px;border-radius:999px;background:oklch(0.94 0.008 70);overflow:hidden;"><div style="width:70%;height:100%;background:oklch(0.38 0.045 185);"></div></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="font-weight:600;">F</span><span style="color:oklch(0.49 0.008 70);font-variant-numeric:tabular-nums;">42/60g</span></div>
+                <div style="height:5px;border-radius:999px;background:oklch(0.94 0.008 70);overflow:hidden;"><div style="width:70%;height:100%;background:oklch(0.5 0.07 50);"></div></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="font-weight:600;">C</span><span style="color:oklch(0.49 0.008 70);font-variant-numeric:tabular-nums;">150/240g</span></div>
+                <div style="height:5px;border-radius:999px;background:oklch(0.94 0.008 70);overflow:hidden;"><div style="width:62%;height:100%;background:oklch(0.55 0.045 125);"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <div style="font-size:14px;font-weight:700;">今日のミール</div>
+              <div style="font-size:11px;color:oklch(0.49 0.008 70);">時間枠なし・自由記録</div>
+            </div>
+            <sc-for list="{{ meals }}" as="m" hint-placeholder-count="3">
+              <div style="display:flex;gap:12px;margin-bottom:10px;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:none;width:44px;">
+                  <div style="font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;color:oklch(0.45 0.008 70);">{{ m.time }}</div>
+                  <div style="width:1px;flex:1;background:oklch(0.9 0.008 70);"></div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:8px;padding:14px 15px;border-radius:16px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);min-width:0;">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+                    <div style="font-size:14px;font-weight:600;">{{ m.title }}</div>
+                    <div style="font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;flex:none;">{{ m.kcal }}</div>
+                  </div>
+                  <div style="font-size:11px;color:oklch(0.49 0.008 70);line-height:1.5;">{{ m.items }}</div>
+                  <div style="font-size:11px;color:oklch(0.43 0.008 70);font-variant-numeric:tabular-nums;">{{ m.pfc }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:11px;padding:16px;border-radius:18px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <div style="font-size:14px;font-weight:700;">微量栄養素の充足度</div>
+              <div style="font-size:11px;color:oklch(0.49 0.008 70);">本日</div>
+            </div>
+            <sc-for list="{{ micros }}" as="mi" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:7px;">
+                <div style="font-size:11px;width:70px;flex:none;color:oklch(0.45 0.008 70);">{{ mi.name }}</div>
+                <div style="flex:1;height:5px;border-radius:999px;background:oklch(0.94 0.008 70);overflow:hidden;"><div style="width:{{ mi.pct }};height:100%;background:{{ mi.color }};"></div></div>
+                <div style="font-size:11px;width:36px;text-align:right;flex:none;color:oklch(0.49 0.008 70);font-variant-numeric:tabular-nums;">{{ mi.pct }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <button onClick="{{ goMealAdd }}" style="cursor:pointer;width:100%;padding:15px;border-radius:14px;background:oklch(0.5 0.07 50);border:none;color:#fff;font-size:15px;font-weight:700;" style-hover="background:oklch(0.44 0.07 50);">＋ 食事を記録する</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isMealAdd }}">
+        <div style="display:flex;flex-direction:column;gap:14px;padding:12px 20px 108px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button onClick="{{ goMeal }}" style="cursor:pointer;border:none;background:none;padding:0;font-size:14px;color:oklch(0.43 0.008 70);">←</button>
+            <div style="font-size:20px;font-weight:700;">食事を記録</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:18px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+              <div style="font-size:13px;font-weight:700;">{{ remainTitle }}</div>
+              <div style="font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;">残り {{ pvKcalLeft }} kcal</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:8px;">
+              <sc-for list="{{ pvPfc }}" as="pp" hint-placeholder-count="3">
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:4px;">
+                    <div style="font-size:11px;font-weight:600;">{{ pp.short }}</div>
+                    <div style="font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;color:{{ pp.leftColor }};">{{ pp.left }}</div>
+                  </div>
+                  <div style="height:5px;border-radius:999px;background:oklch(0.94 0.008 70);overflow:hidden;"><div style="width:{{ pp.pct }};height:100%;border-radius:999px;background:{{ pp.color }};"></div></div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <sc-for list="{{ pvMicroShort }}" as="pm" hint-placeholder-count="2">
+                <div style="font-size:11px;font-weight:600;padding:5px 9px;border-radius:999px;background:oklch(0.96 0.018 50);color:oklch(0.42 0.06 50);">{{ pm.name }} {{ pm.left }}</div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:4px;padding:4px;border-radius:12px;background:oklch(0.94 0.006 70);">
+            <sc-for list="{{ mealTabs }}" as="mt" hint-placeholder-count="3">
+              <button onClick="{{ mt.pick }}" style="cursor:pointer;border:none;padding:9px 4px;border-radius:9px;background:{{ mt.bg }};color:{{ mt.fg }};font-size:12px;font-weight:700;">{{ mt.label }}</button>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ isListTab }}">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+                <div style="font-size:13px;font-weight:700;">マイ食事リスト</div>
+                <div style="font-size:11px;color:oklch(0.49 0.008 70);">毎日の定番をワンタップで</div>
+              </div>
+              <sc-for list="{{ mealLists }}" as="ml" hint-placeholder-count="3">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px;border-radius:14px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);margin-bottom:8px;">
+                  <div style="display:flex;flex-direction:column;gap:4px;min-width:0;">
+                    <div style="font-size:14px;font-weight:700;">{{ ml.name }}</div>
+                    <div style="font-size:11px;line-height:1.5;color:oklch(0.49 0.008 70);">{{ ml.items }}</div>
+                    <div style="font-size:11px;font-weight:600;font-variant-numeric:tabular-nums;color:oklch(0.35 0.008 70);">{{ ml.summary }}</div>
+                  </div>
+                  <button onClick="{{ ml.add }}" style="cursor:pointer;flex:none;padding:9px 12px;border-radius:10px;border:none;background:oklch(0.5 0.07 50);color:#fff;font-size:12px;font-weight:700;">追加</button>
+                </div>
+              </sc-for>
+              <div style="font-size:11px;line-height:1.6;color:oklch(0.49 0.008 70);">検索で食品を追加して「マイリストに保存」を押すと、新しいリストを作れます</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isSearchTab }}">
+            <div style="display:flex;flex-direction:column;gap:14px;">
+          <input value="{{ foodQuery }}" onChange="{{ onFoodQuery }}" placeholder="食品名で検索（例: 鶏むね）" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:12px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.993 0.003 80);font-size:14px;color:oklch(0.28 0.008 70);" />
+
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+            <div style="font-size:13px;font-weight:700;">{{ foodListTitle }}</div>
+            <div style="font-size:11px;color:oklch(0.49 0.008 70);">栄養成分は自動入力</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;">
+            <sc-for list="{{ filteredFoods }}" as="f" hint-placeholder-count="5">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 14px;border-radius:14px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);margin-bottom:8px;">
+                <div style="display:flex;flex-direction:column;gap:5px;min-width:0;">
+                  <div style="font-size:14px;font-weight:600;">{{ f.name }}</div>
+                  <div style="font-size:11px;font-variant-numeric:tabular-nums;color:oklch(0.49 0.008 70);">{{ f.detail }}</div>
+                  <sc-if value="{{ f.hasTags }}">
+                    <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                      <sc-for list="{{ f.tags }}" as="tg" hint-placeholder-count="1">
+                        <div style="font-size:10px;font-weight:700;padding:3px 7px;border-radius:6px;background:oklch(0.955 0.014 185);color:oklch(0.34 0.045 185);margin-right:4px;">{{ tg }}</div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+                <button onClick="{{ f.add }}" aria-label="追加" style="cursor:pointer;flex:none;width:36px;height:36px;border-radius:10px;border:1px solid oklch(0.86 0.008 70);background:oklch(0.993 0.003 80);font-size:18px;color:oklch(0.4 0.008 70);" style-hover="border-color:oklch(0.5 0.07 50);color:oklch(0.44 0.07 50);">＋</button>
+              </div>
+            </sc-for>
+          </div>
+
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isPhotoTab }}">
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:34px 16px;border-radius:16px;border:1px dashed oklch(0.8 0.008 70);text-align:center;">
+              <div style="font-size:14px;font-weight:700;">写真で記録</div>
+              <div style="font-size:12px;line-height:1.6;color:oklch(0.49 0.008 70);">料理を撮影するとAIが食品と量を推定します（今後対応予定）</div>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:18px;background:oklch(0.975 0.012 50);border:1px solid oklch(0.93 0.018 50);">
+            <div style="font-size:13px;font-weight:700;color:oklch(0.42 0.05 50);">このミールに追加済み</div>
+            <sc-if value="{{ noDraft }}">
+              <div style="font-size:12px;color:oklch(0.49 0.008 70);">候補の＋をタップすると、ここに追加されます</div>
+            </sc-if>
+            <sc-for list="{{ draftRows }}" as="d" hint-placeholder-count="0">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;margin-bottom:6px;">
+                <div style="min-width:0;">{{ d.name }}</div>
+                <div style="display:flex;align-items:center;gap:10px;flex:none;">
+                  <div style="font-variant-numeric:tabular-nums;font-weight:600;">{{ d.kcal }}</div>
+                  <button onClick="{{ d.remove }}" aria-label="削除" style="cursor:pointer;border:none;background:none;padding:2px 4px;font-size:14px;color:oklch(0.49 0.008 70);">×</button>
+                </div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ hasDraft }}">
+              <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;padding-top:9px;border-top:1px solid oklch(0.9 0.018 50);"><span>合計</span><span style="font-variant-numeric:tabular-nums;">{{ draftTotal }}</span></div>
+              <button onClick="{{ saveMealList }}" style="cursor:pointer;width:100%;padding:10px;border-radius:10px;border:1px solid oklch(0.5 0.07 50);background:transparent;color:oklch(0.44 0.07 50);font-size:13px;font-weight:700;">この内容をマイリストに保存</button>
+            </sc-if>
+            <sc-if value="{{ listSaved }}">
+              <div style="font-size:12px;font-weight:600;color:oklch(0.36 0.045 185);">マイリストに保存しました</div>
+            </sc-if>
+          </div>
+
+          <button onClick="{{ commitMeal }}" style="cursor:pointer;width:100%;padding:15px;border-radius:14px;background:oklch(0.5 0.07 50);border:none;color:#fff;font-size:15px;font-weight:700;" style-hover="background:oklch(0.44 0.07 50);">記録する</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isBody }}">
+        <div style="display:flex;flex-direction:column;gap:16px;padding:12px 20px 108px;">
+          <div style="font-size:24px;font-weight:700;letter-spacing:-0.01em;">からだ</div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:20px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="font-size:14px;font-weight:700;">今日の記録</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <div style="font-size:11px;font-weight:600;color:oklch(0.45 0.008 70);">体重 (kg) <span style="color:oklch(0.5 0.12 25);">*必須</span></div>
+              <input value="{{ wVal }}" onChange="{{ onW }}" placeholder="72.4" style="width:100%;box-sizing:border-box;padding:12px 13px;border-radius:10px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.985 0.004 70);font-size:15px;font-variant-numeric:tabular-nums;color:oklch(0.28 0.008 70);" />
+            </div>
+            <div style="display:flex;gap:10px;">
+              <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                <div style="font-size:11px;font-weight:600;color:oklch(0.45 0.008 70);">体脂肪率 (%)</div>
+                <input value="{{ fVal }}" onChange="{{ onF }}" placeholder="任意" style="width:100%;box-sizing:border-box;padding:12px 13px;border-radius:10px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.985 0.004 70);font-size:15px;font-variant-numeric:tabular-nums;color:oklch(0.28 0.008 70);" />
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                <div style="font-size:11px;font-weight:600;color:oklch(0.45 0.008 70);">筋肉量 (kg)</div>
+                <input value="{{ mVal }}" onChange="{{ onM }}" placeholder="任意" style="width:100%;box-sizing:border-box;padding:12px 13px;border-radius:10px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.985 0.004 70);font-size:15px;font-variant-numeric:tabular-nums;color:oklch(0.28 0.008 70);" />
+              </div>
+            </div>
+            <button onClick="{{ saveWeight }}" style="cursor:pointer;width:100%;padding:14px;border-radius:12px;background:oklch(0.38 0.045 185);border:none;color:#fff;font-size:15px;font-weight:700;" style-hover="background:oklch(0.31 0.045 185);">記録する</button>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px;padding:18px;border-radius:20px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <div style="font-size:14px;font-weight:700;">体重の推移</div>
+              <div style="font-size:12px;font-weight:700;color:oklch(0.38 0.045 185);">30日 −1.8kg</div>
+            </div>
+            <div style="display:flex;align-items:flex-end;gap:5px;height:92px;">
+              <div style="flex:1;height:88px;border-radius:4px 4px 0 0;background:oklch(0.9 0.014 185);"></div>
+              <div style="flex:1;height:80px;border-radius:4px 4px 0 0;background:oklch(0.9 0.014 185);"></div>
+              <div style="flex:1;height:84px;border-radius:4px 4px 0 0;background:oklch(0.9 0.014 185);"></div>
+              <div style="flex:1;height:72px;border-radius:4px 4px 0 0;background:oklch(0.9 0.014 185);"></div>
+              <div style="flex:1;height:66px;border-radius:4px 4px 0 0;background:oklch(0.9 0.014 185);"></div>
+              <div style="flex:1;height:70px;border-radius:4px 4px 0 0;background:oklch(0.9 0.014 185);"></div>
+              <div style="flex:1;height:58px;border-radius:4px 4px 0 0;background:oklch(0.9 0.014 185);"></div>
+              <div style="flex:1;height:54px;border-radius:4px 4px 0 0;background:oklch(0.9 0.014 185);"></div>
+              <div style="flex:1;height:48px;border-radius:4px 4px 0 0;background:oklch(0.38 0.045 185);"></div>
+            </div>
+            <div style="display:flex;gap:7px;">
+              <div style="font-size:11px;font-weight:600;padding:6px 11px;border-radius:999px;background:oklch(0.955 0.014 185);color:oklch(0.34 0.045 185);">体重</div>
+              <div style="font-size:11px;font-weight:600;padding:6px 11px;border-radius:999px;background:oklch(0.96 0.008 70);color:oklch(0.43 0.008 70);">体脂肪率</div>
+              <div style="font-size:11px;font-weight:600;padding:6px 11px;border-radius:999px;background:oklch(0.96 0.008 70);color:oklch(0.43 0.008 70);">筋肉量</div>
+              <div style="font-size:11px;font-weight:600;padding:6px 11px;border-radius:999px;background:oklch(0.96 0.008 70);color:oklch(0.43 0.008 70);">歩数</div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <div style="font-size:14px;font-weight:700;">記録一覧</div>
+              <button onClick="{{ goPhotos }}" style="cursor:pointer;border:none;background:none;padding:0;font-size:12px;font-weight:600;color:oklch(0.38 0.045 185);">進捗写真 →</button>
+            </div>
+            <sc-for list="{{ measurements }}" as="m" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:14px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);margin-bottom:8px;">
+                <div style="font-size:11px;color:oklch(0.49 0.008 70);width:34px;flex:none;font-variant-numeric:tabular-nums;">{{ m.date }}</div>
+                <div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;">
+                  <div style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;">{{ m.weight }}</div>
+                  <div style="font-size:11px;color:oklch(0.49 0.008 70);font-variant-numeric:tabular-nums;">{{ m.sub }}</div>
+                </div>
+                <button onClick="{{ m.remove }}" style="cursor:pointer;border:none;background:none;padding:6px;font-size:13px;color:oklch(0.55 0.008 70);" style-hover="color:oklch(0.5 0.12 25);">削除</button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPhotos }}">
+        <div style="display:flex;flex-direction:column;gap:16px;padding:12px 20px 108px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button onClick="{{ goBody }}" style="cursor:pointer;border:none;background:none;padding:0;font-size:14px;color:oklch(0.43 0.008 70);">←</button>
+            <div style="font-size:20px;font-weight:700;">進捗写真</div>
+          </div>
+
+          <div style="display:flex;gap:10px;">
+            <div style="flex:1;display:flex;flex-direction:column;gap:7px;">
+              <div style="aspect-ratio:3/4;border-radius:14px;border:1px solid oklch(0.9 0.008 70);background:repeating-linear-gradient(135deg, oklch(0.955 0.008 70) 0 8px, oklch(0.925 0.008 70) 8px 16px);display:flex;align-items:flex-end;padding:10px;"><div style="font-family:ui-monospace,monospace;font-size:9px;color:oklch(0.45 0.008 70);">front / 8月1日</div></div>
+              <div style="font-size:12px;font-weight:600;">8/1 · 74.2kg</div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:7px;">
+              <div style="aspect-ratio:3/4;border-radius:14px;border:1px solid oklch(0.9 0.008 70);background:repeating-linear-gradient(135deg, oklch(0.955 0.008 70) 0 8px, oklch(0.925 0.008 70) 8px 16px);display:flex;align-items:flex-end;padding:10px;"><div style="font-family:ui-monospace,monospace;font-size:9px;color:oklch(0.45 0.008 70);">front / 9月11日</div></div>
+              <div style="font-size:12px;font-weight:600;">9/11 · 72.4kg</div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:14px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="font-size:13px;font-weight:600;">比較する2枚を選ぶ</div>
+            <div style="font-size:12px;color:oklch(0.38 0.045 185);font-weight:600;">変更</div>
+          </div>
+
+          <div style="font-size:14px;font-weight:700;">すべての写真</div>
+          <div style="display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:8px;">
+            <div style="aspect-ratio:3/4;border-radius:10px;background:repeating-linear-gradient(135deg, oklch(0.955 0.008 70) 0 6px, oklch(0.925 0.008 70) 6px 12px);"></div>
+            <div style="aspect-ratio:3/4;border-radius:10px;background:repeating-linear-gradient(135deg, oklch(0.955 0.008 70) 0 6px, oklch(0.925 0.008 70) 6px 12px);"></div>
+            <div style="aspect-ratio:3/4;border-radius:10px;background:repeating-linear-gradient(135deg, oklch(0.955 0.008 70) 0 6px, oklch(0.925 0.008 70) 6px 12px);"></div>
+            <div style="aspect-ratio:3/4;border-radius:10px;background:repeating-linear-gradient(135deg, oklch(0.955 0.008 70) 0 6px, oklch(0.925 0.008 70) 6px 12px);"></div>
+            <div style="aspect-ratio:3/4;border-radius:10px;background:repeating-linear-gradient(135deg, oklch(0.955 0.008 70) 0 6px, oklch(0.925 0.008 70) 6px 12px);"></div>
+            <div style="aspect-ratio:3/4;border-radius:10px;border:1px dashed oklch(0.8 0.008 70);display:flex;align-items:center;justify-content:center;font-size:18px;color:oklch(0.58 0.008 70);">＋</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSettings }}">
+        <div style="display:flex;flex-direction:column;gap:14px;padding:12px 20px 40px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button onClick="{{ goHome }}" style="cursor:pointer;border:none;background:none;padding:0;font-size:14px;color:oklch(0.43 0.008 70);">←</button>
+            <div style="font-size:20px;font-weight:700;">基本情報</div>
+          </div>
+          <div style="font-size:12px;line-height:1.6;color:oklch(0.49 0.008 70);">消費カロリーの算出と、AIアドバイス・メニュー提案の精度に使います。</div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:18px;background:oklch(0.3 0.03 185);color:oklch(0.97 0.006 185);">
+            <div style="display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:8px;">
+              <div style="display:flex;flex-direction:column;gap:2px;"><div style="font-size:10px;font-weight:700;opacity:0.75;">基礎代謝</div><div style="font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;">{{ bmrLabel }}</div><div style="font-size:10px;opacity:0.7;">kcal</div></div>
+              <div style="display:flex;flex-direction:column;gap:2px;"><div style="font-size:10px;font-weight:700;opacity:0.75;">メンテナンス</div><div style="font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;">{{ tdeeLabel }}</div><div style="font-size:10px;opacity:0.7;">kcal / 日</div></div>
+              <div style="display:flex;flex-direction:column;gap:2px;"><div style="font-size:10px;font-weight:700;opacity:0.75;">目標摂取</div><div style="font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;">{{ kcalTarget }}</div><div style="font-size:10px;opacity:0.7;">kcal / 日</div></div>
+            </div>
+            <div style="font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;padding-top:10px;border-top:1px solid rgba(255,255,255,0.14);">目標 PFC　P {{ tP }}g · F {{ tF }}g · C {{ tC }}g</div>
+            <div style="font-size:10px;opacity:0.7;">{{ bmrMethod }}</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:18px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="font-size:14px;font-weight:700;">からだ</div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">性別</div>
+              <div style="display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:4px;padding:4px;border-radius:10px;background:oklch(0.94 0.006 70);">
+                <sc-for list="{{ sexOpts }}" as="so" hint-placeholder-count="2">
+                  <button onClick="{{ so.pick }}" style="cursor:pointer;border:none;padding:8px;border-radius:8px;background:{{ so.bg }};color:{{ so.fg }};font-size:13px;font-weight:700;">{{ so.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:10px;">
+              <div style="display:flex;flex-direction:column;gap:5px;"><div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">年齢</div><input inputMode="numeric" value="{{ pAge }}" onChange="{{ onAge }}" style="width:100%;box-sizing:border-box;padding:11px 12px;border-radius:10px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.975 0.004 70);font-size:15px;font-variant-numeric:tabular-nums;color:oklch(0.26 0.008 70);" /></div>
+              <div style="display:flex;flex-direction:column;gap:5px;"><div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">身長 (cm)</div><input inputMode="decimal" value="{{ pHeight }}" onChange="{{ onHeight }}" style="width:100%;box-sizing:border-box;padding:11px 12px;border-radius:10px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.975 0.004 70);font-size:15px;font-variant-numeric:tabular-nums;color:oklch(0.26 0.008 70);" /></div>
+              <div style="display:flex;flex-direction:column;gap:5px;"><div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">体重 (kg)</div><input inputMode="decimal" value="{{ pWeight }}" onChange="{{ onPWeight }}" style="width:100%;box-sizing:border-box;padding:11px 12px;border-radius:10px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.975 0.004 70);font-size:15px;font-variant-numeric:tabular-nums;color:oklch(0.26 0.008 70);" /></div>
+              <div style="display:flex;flex-direction:column;gap:5px;"><div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">目標体重 (kg)</div><input inputMode="decimal" value="{{ pTarget }}" onChange="{{ onTarget }}" style="width:100%;box-sizing:border-box;padding:11px 12px;border-radius:10px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.975 0.004 70);font-size:15px;font-variant-numeric:tabular-nums;color:oklch(0.26 0.008 70);" /></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">体脂肪率 (%) · 任意</div>
+              <input inputMode="decimal" value="{{ pBf }}" onChange="{{ onBf }}" placeholder="入力すると基礎代謝をより正確に算出" style="width:100%;box-sizing:border-box;padding:11px 12px;border-radius:10px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.975 0.004 70);font-size:15px;font-variant-numeric:tabular-nums;color:oklch(0.26 0.008 70);" />
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:18px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="font-size:14px;font-weight:700;">日頃の活動量</div>
+            <sc-for list="{{ actOpts }}" as="ao" hint-placeholder-count="5">
+              <button onClick="{{ ao.pick }}" style="cursor:pointer;width:100%;text-align:left;display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;border:1px solid {{ ao.border }};background:{{ ao.bg }};margin-bottom:6px;color:inherit;">
+                <div style="width:16px;height:16px;border-radius:50%;border:2px solid {{ ao.dotBorder }};box-sizing:border-box;display:flex;align-items:center;justify-content:center;flex:none;"><div style="width:6px;height:6px;border-radius:50%;background:{{ ao.dot }};"></div></div>
+                <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;">
+                  <div style="font-size:13px;font-weight:700;">{{ ao.label }}</div>
+                  <div style="font-size:11px;color:oklch(0.49 0.008 70);">{{ ao.desc }}</div>
+                </div>
+                <div style="font-size:11px;font-variant-numeric:tabular-nums;flex:none;color:oklch(0.49 0.008 70);">×{{ ao.factor }}</div>
+              </button>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px;padding:16px;border-radius:18px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="font-size:14px;font-weight:700;">トレーニング</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">目的</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <sc-for list="{{ goalOpts }}" as="go" hint-placeholder-count="4">
+                  <button onClick="{{ go.pick }}" style="cursor:pointer;font-size:12px;font-weight:700;padding:8px 13px;border-radius:999px;border:1px solid {{ go.border }};background:{{ go.bg }};color:{{ go.fg }};margin-right:6px;">{{ go.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">トレーニング経験</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <sc-for list="{{ expOpts }}" as="eo" hint-placeholder-count="3">
+                  <button onClick="{{ eo.pick }}" style="cursor:pointer;font-size:12px;font-weight:700;padding:8px 13px;border-radius:999px;border:1px solid {{ eo.border }};background:{{ eo.bg }};color:{{ eo.fg }};margin-right:6px;">{{ eo.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">週のトレーニング回数</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <sc-for list="{{ freqOpts }}" as="fq" hint-placeholder-count="6">
+                  <button onClick="{{ fq.pick }}" style="cursor:pointer;min-width:42px;font-size:12px;font-weight:700;padding:8px 10px;border-radius:999px;border:1px solid {{ fq.border }};background:{{ fq.bg }};color:{{ fq.fg }};margin-right:6px;">{{ fq.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">分割法</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <sc-for list="{{ splitOpts }}" as="sp" hint-placeholder-count="6">
+                  <button onClick="{{ sp.pick }}" style="cursor:pointer;font-size:12px;font-weight:700;padding:8px 12px;border-radius:999px;border:1px solid {{ sp.border }};background:{{ sp.bg }};color:{{ sp.fg }};margin-right:6px;">{{ sp.label }}</button>
+                </sc-for>
+              </div>
+              <div style="font-size:11px;line-height:1.6;color:oklch(0.49 0.008 70);">{{ splitDesc }}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <sc-for list="{{ splitDays }}" as="sd" hint-placeholder-count="3">
+                <div style="display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:12px;background:oklch(0.97 0.004 70);margin-bottom:8px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <div style="display:flex;align-items:baseline;gap:8px;min-width:0;">
+                      <div style="font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;color:oklch(0.49 0.008 70);">Day {{ sd.num }}</div>
+                      <div style="font-size:13px;font-weight:700;">{{ sd.label }}</div>
+                    </div>
+                    <button onClick="{{ sd.toggleEdit }}" style="cursor:pointer;flex:none;border:none;background:none;padding:4px 2px;font-size:12px;font-weight:700;color:oklch(0.36 0.045 185);">{{ sd.editLabel }}</button>
+                  </div>
+                  <sc-if value="{{ sd.editing }}">
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                      <div style="font-size:10px;font-weight:600;color:oklch(0.49 0.008 70);">この日に鍛える部位（複数選択）</div>
+                      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                        <sc-for list="{{ sd.partOpts }}" as="po" hint-placeholder-count="8">
+                          <button onClick="{{ po.pick }}" style="cursor:pointer;font-size:11px;font-weight:700;padding:6px 10px;border-radius:999px;border:1px solid {{ po.border }};background:{{ po.bg }};color:{{ po.fg }};margin-right:6px;">{{ po.label }}</button>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+              <sc-if value="{{ splitIsCustom }}">
+                <div style="display:flex;gap:8px;">
+                  <button onClick="{{ addSplitDay }}" style="cursor:pointer;flex:1;padding:10px;border-radius:10px;border:1px dashed oklch(0.78 0.008 70);background:transparent;color:oklch(0.42 0.008 70);font-size:12px;font-weight:600;">＋ 日を追加</button>
+                  <button onClick="{{ removeSplitDay }}" style="cursor:pointer;flex:1;padding:10px;border-radius:10px;border:1px dashed oklch(0.78 0.008 70);background:transparent;color:oklch(0.42 0.008 70);font-size:12px;font-weight:600;">− 最後の日を削除</button>
+                </div>
+              </sc-if>
+            </div>
+
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:18px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.915 0.008 70);">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <div style="display:flex;flex-direction:column;gap:2px;">
+                <div style="font-size:14px;font-weight:700;">メンテナンスカロリー</div>
+                <div style="font-size:11px;color:oklch(0.49 0.008 70);">自動計算：{{ tdeeAutoLabel }} kcal</div>
+              </div>
+              <button onClick="{{ toggleMaint }}" aria-label="手入力切替" style="cursor:pointer;flex:none;width:48px;height:28px;border-radius:999px;border:none;padding:3px;display:flex;justify-content:{{ maintJustify }};background:{{ maintBg }};">
+                <div style="width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.2);"></div>
+              </button>
+            </div>
+            <sc-if value="{{ maintManual }}">
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                <div style="font-size:11px;font-weight:600;color:oklch(0.42 0.008 70);">実測値で上書き (kcal)</div>
+                <input inputMode="numeric" value="{{ pMaint }}" onChange="{{ onMaint }}" placeholder="例: 2500" style="width:100%;box-sizing:border-box;padding:11px 12px;border-radius:10px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.975 0.004 70);font-size:15px;font-variant-numeric:tabular-nums;color:oklch(0.26 0.008 70);" />
+              </div>
+            </sc-if>
+            <div style="font-size:11px;line-height:1.6;color:oklch(0.49 0.008 70);">体重が安定している期間の摂取量がわかる場合は、手入力のほうが正確です。</div>
+          </div>
+
+          <button onClick="{{ goHome }}" style="cursor:pointer;width:100%;padding:15px;border-radius:14px;background:oklch(0.38 0.045 185);border:none;color:#fff;font-size:15px;font-weight:700;" style-hover="background:oklch(0.31 0.045 185);">保存する</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isLogin }}">
+        <div style="display:flex;flex-direction:column;gap:20px;padding:70px 26px 40px;min-height:100%;box-sizing:border-box;">
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center;">
+            <div style="width:52px;height:52px;border-radius:16px;background:oklch(0.38 0.045 185);"></div>
+            <div style="font-size:22px;font-weight:700;">フィットネス管理アプリ</div>
+            <div style="font-size:13px;color:oklch(0.49 0.008 70);line-height:1.6;">筋トレ・食事・からだの記録を<br />ひとつにまとめて続ける</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:14px;">
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="font-size:11px;font-weight:600;color:oklch(0.45 0.008 70);">メールアドレス</div>
+              <input placeholder="you@example.com" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:12px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.993 0.003 80);font-size:14px;color:oklch(0.28 0.008 70);" />
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="font-size:11px;font-weight:600;color:oklch(0.45 0.008 70);">パスワード</div>
+              <input type="password" placeholder="••••••••" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:12px;border:1px solid oklch(0.9 0.008 70);background:oklch(0.993 0.003 80);font-size:14px;color:oklch(0.28 0.008 70);" />
+            </div>
+            <button onClick="{{ goHome }}" style="cursor:pointer;width:100%;padding:15px;border-radius:12px;background:oklch(0.38 0.045 185);border:none;color:#fff;font-size:15px;font-weight:700;margin-top:4px;" style-hover="background:oklch(0.31 0.045 185);">ログイン</button>
+            <button onClick="{{ goHome }}" style="cursor:pointer;width:100%;padding:15px;border-radius:12px;background:oklch(0.993 0.003 80);border:1px solid oklch(0.88 0.008 70);color:oklch(0.35 0.008 70);font-size:15px;font-weight:700;">新規登録</button>
+            <div style="text-align:center;font-size:12px;color:oklch(0.49 0.008 70);margin-top:6px;">パスワードをお忘れですか？</div>
+          </div>
+
+          <div style="margin-top:auto;text-align:center;font-size:11px;color:oklch(0.55 0.008 70);line-height:1.6;">オフラインでも記録できます。<br />ログインするとバックアップと同期が有効になります。</div>
+        </div>
+      </sc-if>
+
+    </div>
+
+    <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+      <div style="position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5, minmax(0,1fr));gap:0;padding:9px 8px 24px;background:oklch(0.99 0.004 70);border-top:1px solid oklch(0.915 0.008 70);">
+        <button onClick="{{ goHome }}" style="border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:5px 0;">
+          <div style="width:48px;height:26px;border-radius:999px;background:{{ homePill }};display:flex;align-items:center;justify-content:center;">
+            <div style="width:15px;height:15px;border-radius:4px;background:{{ homeInk }};"></div>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:{{ homeInk }};">ホーム</div>
+        </button>
+        <button onClick="{{ goMytre }}" style="border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:5px 0;">
+          <div style="width:48px;height:26px;border-radius:999px;background:{{ mytrePill }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+            <div style="width:15px;height:3px;border-radius:2px;background:{{ mytreInk }};"></div>
+            <div style="width:15px;height:3px;border-radius:2px;background:{{ mytreInk }};"></div>
+            <div style="width:15px;height:3px;border-radius:2px;background:{{ mytreInk }};"></div>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:{{ mytreInk }};">マイトレ</div>
+        </button>
+        <button onClick="{{ goTrain }}" style="border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:5px 0;">
+          <div style="width:48px;height:26px;border-radius:999px;background:{{ trainPill }};display:flex;align-items:center;justify-content:center;">
+            <div style="width:17px;height:8px;border-radius:3px;background:{{ trainInk }};"></div>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:{{ trainInk }};">筋トレ</div>
+        </button>
+        <button onClick="{{ goMeal }}" style="border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:5px 0;">
+          <div style="width:48px;height:26px;border-radius:999px;background:{{ mealPill }};display:flex;align-items:center;justify-content:center;">
+            <div style="width:15px;height:15px;border-radius:50%;background:{{ mealInk }};"></div>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:{{ mealInk }};">食事</div>
+        </button>
+        <button onClick="{{ goBody }}" style="border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:5px 0;">
+          <div style="width:48px;height:26px;border-radius:999px;background:{{ bodyPill }};display:flex;align-items:center;justify-content:center;">
+            <div style="width:15px;height:15px;border-radius:4px;border:3px solid {{ bodyInk }};box-sizing:border-box;"></div>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:{{ bodyInk }};">からだ</div>
+        </button>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:520,&quot;height&quot;:1080},&quot;weightUnit&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;kg&quot;,&quot;lb&quot;],&quot;default&quot;:&quot;kg&quot;,&quot;tsType&quot;:&quot;'kg' | 'lb'&quot;,&quot;section&quot;:&quot;設定&quot;},&quot;restSeconds&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:90,&quot;min&quot;:30,&quot;max&quot;:300,&quot;step&quot;:15,&quot;unit&quot;:&quot;秒&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;設定&quot;},&quot;showRestTimer&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;設定&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'home', done: {}, seconds: 0, restLeft: 0, restKey: null, restOn: null,
+    exQuery: '', part: 'すべて', foodQuery: '',
+    w: '', f: '', m: '',
+    extra: {}, edits: {}, period: 'm', draft: [], logged: [], microAll: false, adviceIdx: 0,
+    exType: { 0: 'ピラミッド', 1: 'ドロップ' }, typeOpen: null, rtTypes: {}, editRt: null,
+    paused: false, doneHistory: [],
+    profile: { sex: 'male', age: '28', height: '175', weight: '72.4', target: '70', bf: '15.2', act: 'mid', goal: '減量', exp: '中級', freq: 4, maintManual: false, maint: '' },
+    focus: 0, aiVariant: 0, assist: {}, assistOpen: null, splitEdit: null, splitPanel: false,
+    split: 'PPL', splitDays: [{ label: 'プッシュ', parts: ['胸', '肩', '三頭'] }, { label: 'プル', parts: ['背中', '二頭'] }, { label: 'レッグ', parts: ['脚', '臀部'] }], aiSaved: false, customRts: [],
+    mealTab: 'list', listSaved: false,
+    mealLists: [
+      { name: '朝の定番', foods: ['鶏むね肉（皮なし）', '白米（炊飯）', '納豆'] },
+      { name: '昼の定番', foods: ['鶏むね肉（皮なし）', '白米（炊飯）', 'ブロッコリー（茹で）'] },
+      { name: 'トレ後', foods: ['プロテイン（ホエイ）', 'ギリシャヨーグルト'] }
+    ],
+    measurements: [
+      { id: 1, date: '9/11', weight: '72.4 kg', sub: '体脂肪率 15.2% / 筋肉量 58.1kg' },
+      { id: 2, date: '9/9', weight: '72.7 kg', sub: '体脂肪率 15.4%' },
+      { id: 3, date: '9/7', weight: '72.9 kg', sub: '体脂肪率 15.5% / 筋肉量 58.0kg' },
+      { id: 4, date: '9/4', weight: '73.3 kg', sub: '—' }
+    ]
+  };
+
+  componentDidMount() {
+    this.timer = setInterval(() => this.setState(s => ({
+      seconds: s.screen === 'session' ? s.seconds + 1 : s.seconds,
+      restLeft: s.restLeft > 0 ? s.restLeft - 1 : 0
+    })), 1000);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  fmt(t) {
+    const m = Math.floor(t / 60), s = t % 60;
+    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+  go(screen) { return () => this.setState({ screen }); }
+
+  library() {
+    return [
+      { name: 'ベンチプレス', part: '胸', last: '72.5kg × 8' },
+      { name: 'インクラインダンベルプレス', part: '胸', last: '24kg × 10' },
+      { name: 'ケーブルフライ', part: '胸', last: '20kg × 15' },
+      { name: 'ラットプルダウン', part: '背中', last: '55kg × 10' },
+      { name: 'ベントオーバーロウ', part: '背中', last: '60kg × 8' },
+      { name: 'デッドリフト', part: '背中', last: '140kg × 5' },
+      { name: 'バーベルスクワット', part: '脚', last: '110kg × 6' },
+      { name: 'レッグプレス', part: '脚', last: '180kg × 10' },
+      { name: 'ショルダープレス', part: '肩', last: '40kg × 10' },
+      { name: 'サイドレイズ', part: '肩', last: '10kg × 15' },
+      { name: 'バーベルカール', part: '腕', last: '30kg × 10' },
+      { name: 'プランク', part: '体幹', last: '60秒' }
+    ];
+  }
+
+  foods() {
+    return [
+      { name: '鶏むね肉（皮なし）', serving: '100g', kcal: 108, p: 22.3, f: 1.5, c: 0.1, ca: 4, vc: 3, fe: 0.3, fib: 0 },
+      { name: 'ギリシャヨーグルト', serving: '1個 100g', kcal: 90, p: 10, f: 0, c: 12, ca: 120, vc: 0, fe: 0, fib: 0 },
+      { name: '牛乳', serving: '200ml', kcal: 122, p: 6.6, f: 7.6, c: 9.6, ca: 220, vc: 2, fe: 0, fib: 0 },
+      { name: 'ブロッコリー（茹で）', serving: '100g', kcal: 30, p: 3.9, f: 0.4, c: 4.3, ca: 33, vc: 55, fe: 0.9, fib: 4.3 },
+      { name: 'キウイ', serving: '1個', kcal: 51, p: 1, f: 0.2, c: 13, ca: 33, vc: 71, fe: 0.3, fib: 2.5 },
+      { name: '納豆', serving: '1パック 45g', kcal: 95, p: 7.4, f: 4.5, c: 5.4, ca: 41, vc: 0, fe: 1.5, fib: 3 },
+      { name: '卵（全卵）', serving: '1個 50g', kcal: 71, p: 6.1, f: 5.1, c: 0.2, ca: 23, vc: 0, fe: 0.8, fib: 0 },
+      { name: '白米（炊飯）', serving: '150g', kcal: 252, p: 3.8, f: 0.5, c: 55.7, ca: 5, vc: 0, fe: 0.2, fib: 0.5 },
+      { name: 'プロテイン（ホエイ）', serving: '1杯 30g', kcal: 116, p: 24, f: 1.5, c: 2, ca: 100, vc: 0, fe: 0, fib: 0 }
+    ];
+  }
+
+  setTypes() {
+    return {
+      'ストレート': '同じ重量・回数でセットを繰り返す基本の形式です。',
+      'ピラミッド': 'セットごとに重量を上げ、回数を減らしていきます。',
+      'ドロップ': '限界まで行ったら重量を下げ、休まず続けます。レストは最後のセットの後だけ。',
+      'スーパー': '次の種目と交互に、休まず行います。レストは2種目が終わってから。',
+      'ジャイアント': '3種目以上を休まず連続で行います。レストは1周終えてから。'
+    };
+  }
+
+  typeStyle(t, active) {
+    if (active) return { bg: 'oklch(0.38 0.045 185)', fg: '#fff', border: 'oklch(0.38 0.045 185)' };
+    if (t === 'ストレート') return { bg: 'oklch(0.95 0.006 70)', fg: 'oklch(0.38 0.008 70)', border: 'oklch(0.9 0.008 70)' };
+    return { bg: 'oklch(0.96 0.018 50)', fg: 'oklch(0.42 0.06 50)', border: 'oklch(0.9 0.025 50)' };
+  }
+
+  calc() {
+    const P = this.state.profile;
+    const num = (v, d) => { const n = parseFloat(v); return isNaN(n) ? d : n; };
+    const wt = num(P.weight, 72.4), ht = num(P.height, 175), age = num(P.age, 28), bf = parseFloat(P.bf);
+    let bmr, method;
+    if (!isNaN(bf) && bf > 3 && bf < 60) { bmr = 370 + 21.6 * wt * (1 - bf / 100); method = 'Katch-McArdle式（体脂肪率を使用）× 活動係数で算出'; }
+    else { bmr = 10 * wt + 6.25 * ht - 5 * age + (P.sex === 'male' ? 5 : -161); method = 'Mifflin-St Jeor式 × 活動係数で算出'; }
+    const fac = { low: 1.2, light: 1.375, mid: 1.55, high: 1.725, vhigh: 1.9 }[P.act];
+    const tdeeAuto = bmr * fac;
+    const tdee = P.maintManual && num(P.maint, 0) > 800 ? num(P.maint, 0) : tdeeAuto;
+    const adj = { '減量': -400, '体型維持': 0, '筋肥大': 300, '筋力アップ': 200 }[P.goal];
+    const kcal = Math.round((tdee + adj) / 10) * 10;
+    const p = Math.round(wt * (P.goal === '減量' ? 2.2 : 2.0));
+    const f = Math.round(kcal * 0.25 / 9);
+    const c = Math.max(0, Math.round((kcal - p * 4 - f * 9) / 4));
+    return { wt, bmr, tdee, tdeeAuto, kcal, p, f, c, method, target: num(P.target, 70) };
+  }
+
+  splitPresets() {
+    return {
+      '全身法': { desc: '毎回全身を鍛える。週2〜3回の初心者や時間が少ない人向け。', days: [{ label: '全身', parts: ['全身'] }] },
+      '上下2分割': { desc: '上半身と下半身を交互に。週4回前後で回しやすい。', days: [{ label: '上半身', parts: ['胸', '背中', '肩', '二頭', '三頭'] }, { label: '下半身', parts: ['脚', '臀部', '腹筋'] }] },
+      'PPL': { desc: '押す・引く・脚の3分割。週3〜6回で回せる定番。', days: [{ label: 'プッシュ', parts: ['胸', '肩', '三頭'] }, { label: 'プル', parts: ['背中', '二頭'] }, { label: 'レッグ', parts: ['脚', '臀部'] }] },
+      '4分割': { desc: '部位を4日に分けて1部位あたりのボリュームを増やす。', days: [{ label: '', parts: ['胸', '三頭'] }, { label: '', parts: ['背中', '二頭'] }, { label: '', parts: ['脚', '臀部'] }, { label: '', parts: ['肩', '腹筋'] }] },
+      '5分割': { desc: '1日1部位に集中する上級者向け。各日の部位は自由に変更できます。', days: [{ label: '', parts: ['胸'] }, { label: '', parts: ['背中'] }, { label: '', parts: ['脚'] }, { label: '', parts: ['肩'] }, { label: '', parts: ['二頭', '三頭'] }] },
+      'カスタム': { desc: '日数も部位も自由に組めます。', days: null }
+    };
+  }
+
+  dayLabel(d) { return d.label || d.parts.join('・') || '未設定'; }
+
+  aiMenu(P, day, variant) {
+    const pools = {
+      '肩': [['ショルダープレス', 'サイドレイズ', 'リアレイズ', 'アップライトロウ', 'フェイスプル'], ['ダンベルショルダープレス', 'ケーブルサイドレイズ', 'リバースペックデック', 'フロントレイズ', 'シュラッグ']],
+      '二頭': [['バーベルカール', 'インクラインカール', 'ハンマーカール'], ['EZバーカール', 'プリーチャーカール', 'ケーブルカール']],
+      '三頭': [['ナローベンチプレス', 'トライセプスプレスダウン', 'フレンチプレス'], ['ディップス', 'スカルクラッシャー', 'キックバック']],
+      '腹筋': [['アブローラー', 'ハンギングレッグレイズ', 'プランク'], ['ケーブルクランチ', 'デッドバグ', 'サイドプランク']],
+      '臀部': [['ヒップスラスト', 'ブルガリアンスクワット', 'ケーブルキックバック'], ['ルーマニアンデッドリフト', 'ヒップアブダクション', 'ステップアップ']],
+      '上半身': [['ベンチプレス', 'ラットプルダウン', 'ショルダープレス', 'ベントオーバーロウ', 'サイドレイズ', 'バーベルカール'], ['インクラインダンベルプレス', 'チンニング', 'ダンベルショルダープレス', 'シーテッドロウ', 'フェイスプル', 'トライセプスプレスダウン']],
+      '下半身': [['バーベルスクワット', 'ルーマニアンデッドリフト', 'レッグプレス', 'レッグカール', 'カーフレイズ'], ['ブルガリアンスクワット', 'ヒップスラスト', 'レッグエクステンション', 'レッグカール', 'カーフレイズ']],
+      '全身': [['バーベルスクワット', 'ベンチプレス', 'ベントオーバーロウ', 'ショルダープレス', 'プランク'], ['デッドリフト', 'ダンベルプレス', 'ラットプルダウン', 'ランジ', 'アブローラー']],
+      '胸': [['ベンチプレス', 'インクラインダンベルプレス', 'ディップス', 'ケーブルフライ', 'プッシュアップ'], ['ダンベルプレス', 'インクラインベンチプレス', 'ペックデック', 'ケーブルクロスオーバー', 'プッシュアップ']],
+      '背中': [['デッドリフト', 'ラットプルダウン', 'ベントオーバーロウ', 'シーテッドロウ', 'フェイスプル'], ['チンニング', 'ワンハンドロウ', 'Tバーロウ', 'ストレートアームプルダウン', 'バックエクステンション']],
+      '脚': [['バーベルスクワット', 'レッグプレス', 'ルーマニアンデッドリフト', 'レッグカール', 'カーフレイズ'], ['フロントスクワット', 'ブルガリアンスクワット', 'ヒップスラスト', 'レッグエクステンション', 'カーフレイズ']]
+    };
+    const n = { '初心者': 3, '中級': 4, '上級': 5 }[P.exp];
+    const v = variant % 2;
+    const keyMap = { 'プッシュ': ['胸', '肩', '三頭'], 'プル': ['背中', '二頭'], 'レッグ': ['脚', '臀部'] };
+    let list;
+    if (pools[day.label] && !keyMap[day.label]) list = pools[day.label][v].slice(0, n + (day.label === '全身' ? 1 : 0));
+    else {
+      const parts = (keyMap[day.label] || day.parts).filter(p => pools[p]);
+      const per = parts.map(p => pools[p][v].slice());
+      list = [];
+      const cap = Math.max(n, Math.min(6, parts.length + 2));
+      let i = 0;
+      while (list.length < cap && per.some(a => a.length)) { const a = per[i % per.length]; if (a.length) { const x = a.shift(); if (list.indexOf(x) < 0) list.push(x); } i++; }
+    }
+    const G = P.goal, lv = P.exp;
+    const rx = {
+      '筋肥大': { sets: lv === '上級' ? 4 : 3, reps: '8–12回', rest: 90, type: 'ストレート' },
+      '筋力アップ': { sets: lv === '初心者' ? 3 : 5, reps: lv === '初心者' ? '6–8回' : '3–5回', rest: 180, type: 'ピラミッド' },
+      '減量': { sets: 3, reps: '12–15回', rest: 45, type: 'スーパー' },
+      '体型維持': { sets: 3, reps: '10回', rest: 60, type: 'ストレート' }
+    }[G];
+    const menu = list.map((name, i) => {
+      let type = rx.type;
+      if (G === '筋力アップ' && i > 0) type = 'ストレート';
+      if (G === '減量' && list.length % 2 === 1 && i === list.length - 1) type = 'ストレート';
+      if (G === '筋肥大' && lv !== '初心者' && i === list.length - 1) type = 'ドロップ';
+      const sets = i === 0 && G !== '減量' ? rx.sets + (lv === '上級' ? 1 : 0) : rx.sets;
+      return { name, type, plan: sets + 'セット × ' + rx.reps };
+    });
+    const why = {
+      '筋肥大': '筋肥大に効きやすい 8–12回 を中心に、最後の種目はドロップセットで追い込みます。',
+      '筋力アップ': '最初の種目は高重量・低回数のピラミッド、残りは補助種目として組んでいます。',
+      '減量': '12–15回を2種目ずつスーパーセットにして休憩を短くし、消費カロリーを高めます。',
+      '体型維持': '今の筋量を保つため、主要種目を中程度の回数でバランスよく行います。'
+    }[G];
+    return { menu, reason: lv + ' · ' + G + '向け：' + why + '（レスト目安 ' + rx.rest + '秒）' };
+  }
+
+  nutrition() {
+    const T0 = { kcal: 2200, p: 140, f: 60, c: 240, ca: 650, vc: 100, fe: 7.5, fib: 21, vd: 9, mg: 370, zn: 11, va: 850, vb1: 1.4, vb2: 1.6, vb6: 1.5, vb12: 2.4, fol: 240, ve: 6.5, vk: 150, k: 3000 };
+    const base = { kcal: 1420, p: 98, f: 42, c: 150, ca: 250, vc: 45, fe: 5.1, fib: 15, vd: 2.5, mg: 210, zn: 7.2, va: 420, vb1: 0.9, vb2: 1.1, vb6: 1.3, vb12: 3.1, fol: 150, ve: 4.2, vk: 180, k: 1900 };
+    const C = this.calc();
+    const T = Object.assign({}, T0, { kcal: C.kcal, p: C.p, f: C.f, c: C.c });
+    const sum = (arr, start) => arr.reduce((a, x) => { const o = Object.assign({}, a); Object.keys(T).forEach(k => o[k] += (x[k] || 0)); return o; }, start);
+    const eaten = sum(this.state.logged, base);
+    const preview = sum(this.state.draft, eaten);
+    return { T, eaten, preview };
+  }
+
+  pfc(n, T) {
+    const defs = [
+      { k: 'p', name: 'たんぱく質', short: 'P', color: 'oklch(0.38 0.045 185)' },
+      { k: 'f', name: '脂質', short: 'F', color: 'oklch(0.5 0.07 50)' },
+      { k: 'c', name: '炭水化物', short: 'C', color: 'oklch(0.55 0.045 125)' }
+    ];
+    return defs.map(d => {
+      const left = T[d.k] - n[d.k];
+      return {
+        name: d.name, short: d.short, color: d.color,
+        pct: Math.min(100, n[d.k] / T[d.k] * 100).toFixed(0) + '%',
+        left: left > 0.5 ? 'あと ' + Math.round(left) + 'g' : (left < -3 ? Math.round(-left) + 'g 超過' : '達成'),
+        leftColor: left > 0.5 ? 'oklch(0.26 0.008 70)' : (left < -3 ? 'oklch(0.5 0.12 25)' : 'oklch(0.38 0.045 185)'),
+        frac: Math.round(n[d.k]) + ' / ' + T[d.k] + 'g'
+      };
+    });
+  }
+
+  micro(n, T) {
+    const defs = [
+      { k: 'ca', name: 'カルシウム', u: 'mg' }, { k: 'vc', name: 'ビタミンC', u: 'mg' },
+      { k: 'fe', name: '鉄', u: 'mg' }, { k: 'fib', name: '食物繊維', u: 'g' },
+      { k: 'vd', name: 'ビタミンD', u: 'µg' }, { k: 'mg', name: 'マグネシウム', u: 'mg' },
+      { k: 'zn', name: '亜鉛', u: 'mg' }, { k: 'va', name: 'ビタミンA', u: 'µg' },
+      { k: 'vb1', name: 'ビタミンB1', u: 'mg' }, { k: 'vb2', name: 'ビタミンB2', u: 'mg' },
+      { k: 'vb6', name: 'ビタミンB6', u: 'mg' }, { k: 'vb12', name: 'ビタミンB12', u: 'µg' },
+      { k: 'fol', name: '葉酸', u: 'µg' }, { k: 've', name: 'ビタミンE', u: 'mg' },
+      { k: 'vk', name: 'ビタミンK', u: 'µg' }, { k: 'k', name: 'カリウム', u: 'mg' }
+    ];
+    return defs.map(d => {
+      const r = n[d.k] / T[d.k], left = T[d.k] - n[d.k];
+      const amt = T[d.k] >= 50 ? Math.round(left) : Math.round(left * 10) / 10;
+      return {
+        k: d.k, ratio: r, name: d.name,
+        pct: Math.min(100, r * 100).toFixed(0) + '%',
+        color: r < 0.5 ? 'oklch(0.5 0.07 50)' : 'oklch(0.38 0.045 185)',
+        left: left > 0 ? 'あと ' + amt + d.u : '達成',
+        leftColor: r < 0.5 ? 'oklch(0.44 0.07 50)' : (left > 0 ? 'oklch(0.3 0.008 70)' : 'oklch(0.38 0.045 185)')
+      };
+    }).sort((a, b) => a.ratio - b.ratio);
+  }
+
+  weightSeries(cur) {
+    const n = 90, start = 75.6, out = [];
+    for (let i = 0; i < n; i++) {
+      const t = i / (n - 1);
+      const noise = i === n - 1 ? 0 : 0.22 * Math.sin(i * 1.7) + 0.14 * Math.sin(i * 0.63);
+      out.push(Math.round((start + (cur - start) * t + noise) * 10) / 10);
+    }
+    return out;
+  }
+
+  renderVals() {
+    const s = this.state, sc = s.screen;
+    const showRest = s.restOn ?? (this.props.showRestTimer !== false);
+    const restSec = this.props.restSeconds ?? 90;
+    const unit = this.props.weightUnit ?? 'kg';
+
+    const plan = [
+      { name: 'ベンチプレス', part: '胸', sets: [[70, 10, '70×10'], [72.5, 8, '72.5×8'], [75, 6, '72.5×6']] },
+      { name: 'サイドレイズ', part: '肩', sets: [[12, 12, '10×12'], [10, 10, '10×10'], [8, 10, '8×8']] }
+    ];
+
+    let total = 0, done = 0;
+    const exercises = plan.map((ex, ei) => {
+      const rows = ex.sets.concat(s.extra[ei] || []);
+      return {
+        name: ex.name,
+        part: ex.part,
+        ...(() => {
+          const TY = this.setTypes();
+          const t = s.exType[ei] || 'ストレート';
+          const st0 = this.typeStyle(t, false);
+          return {
+            typeLabel: t + 'セット',
+            typeBg: st0.bg, typeFg: st0.fg, typeBorder: st0.border,
+            typeOpen: s.typeOpen === ei,
+            hasNote: t !== 'ストレート',
+            typeNote: TY[t],
+            toggleType: () => this.setState(p => ({ typeOpen: p.typeOpen === ei ? null : ei })),
+            options: Object.keys(TY).map(o => {
+              const so = this.typeStyle(o, o === t);
+              return { label: o, bg: so.bg, fg: so.fg, border: so.border,
+                pick: () => this.setState(p => ({ exType: Object.assign({}, p.exType, { [ei]: o }), typeOpen: null })) };
+            })
+          };
+        })(),
+        addSet: () => this.setState(st => {
+          const extra = Object.assign({}, st.extra);
+          const last = rows[rows.length - 1];
+          extra[ei] = (extra[ei] || []).concat([[last[0], last[1], '—']]);
+          return { extra };
+        }),
+        sets: rows.map((st, si) => {
+          const key = ei + '-' + si;
+          const isDone = !!s.done[key];
+          total++; if (isDone) done++;
+          const prevW = parseFloat(String(st[2]).split('×')[0]);
+          const up = !isNaN(prevW) && st[0] > prevW;
+          const ed = s.edits[key] || {};
+          const setEdit = (field, v) => this.setState(p => {
+            const edits = Object.assign({}, p.edits);
+            edits[key] = Object.assign({}, edits[key], { [field]: v.replace(/[^\d.]/g, '') });
+            return { edits };
+          });
+          return {
+            num: si + 1,
+            wVal: ed.w ?? String(st[0]),
+            rVal: ed.r ?? String(st[1]),
+            ...(() => {
+              const a = s.assist[key] || null;
+              const n = a ? a.n : 0, scope = a ? a.scope : 'part', by = a ? a.by : 'パートナー';
+              const reps = parseInt(ed.r ?? String(st[1]), 10) || 0;
+              const upd = patch => this.setState(p => ({ assist: Object.assign({}, p.assist, { [key]: Object.assign({ n: 0, scope: 'part', by: 'パートナー', memo: '' }, p.assist[key], patch) }) }));
+              const has = a && (a.scope === 'full' || a.n > 0);
+              const open = s.assistOpen === key;
+              const seg = on => on ? { bg: 'oklch(0.993 0.003 80)', fg: 'oklch(0.3 0.04 50)' } : { bg: 'transparent', fg: 'oklch(0.49 0.008 70)' };
+              const c2 = on => on ? { bg: 'oklch(0.5 0.07 50)', fg: '#fff', border: 'oklch(0.5 0.07 50)' } : { bg: 'oklch(0.993 0.003 80)', fg: 'oklch(0.4 0.008 70)', border: 'oklch(0.86 0.012 50)' };
+              return {
+                assistOpen: open,
+                toggleAssist: () => this.setState(p => ({ assistOpen: p.assistOpen === key ? null : key })),
+                numBg: has ? 'oklch(0.96 0.018 50)' : (open ? 'oklch(0.94 0.006 70)' : 'transparent'),
+                numFg: has ? 'oklch(0.42 0.06 50)' : 'oklch(0.49 0.008 70)',
+                assistN: n, totalReps: reps + n,
+                isPartial: scope === 'part', isFull: scope === 'full',
+                scopeOpts: [['part', '最後の数回だけ補助'], ['full', 'セット全体を補助']].map(o => { const c = seg(scope === o[0]); return { label: o[1], bg: c.bg, fg: c.fg, pick: () => upd({ scope: o[0] }) }; }),
+                byOpts: ['パートナー', 'トレーナー', 'セルフ（片手補助）'].map(o => { const c = c2(by === o); return { label: o, bg: c.bg, fg: c.fg, border: c.border, pick: () => upd({ by: o }) }; }),
+                assistInc: () => upd({ n: Math.min(20, n + 1) }),
+                assistDec: () => upd({ n: Math.max(0, n - 1) }),
+                memo: a ? a.memo : '', hasMemo: !!(a && a.memo),
+                onMemo: e => upd({ memo: e.target.value }),
+                clearAssist: () => this.setState(p => { const x = Object.assign({}, p.assist); delete x[key]; return { assist: x, assistOpen: null }; }),
+                hasAssistBadge: !!(has || (a && a.memo)) && !open,
+                assistBadge: !has ? 'メモあり' : (scope === 'full' ? 'セット全体を補助 · ' + by : '補助 +' + n + '回 · ' + by)
+              };
+            })(),
+            onWeight: e => setEdit('w', e.target.value),
+            onReps: e => setEdit('r', e.target.value),
+            prev: st[2] === '—' ? '—' : (up ? '↑' : '') + st[2],
+            ...(() => {
+              const active = s.restKey === key && s.restLeft > 0;
+              return {
+                restText: active ? String(s.restLeft) : (restSec >= 60 ? Math.floor(restSec / 60) + ':' + String(restSec % 60).padStart(2, '0') : restSec + 's'),
+                restBg: active ? 'oklch(0.955 0.014 185)' : 'oklch(0.993 0.003 80)',
+                restFg: active ? 'oklch(0.34 0.045 185)' : 'oklch(0.45 0.008 70)',
+                restBorder: active ? 'oklch(0.38 0.045 185)' : 'oklch(0.86 0.008 70)',
+                startRest: () => this.setState(p => (p.restKey === key && p.restLeft > 0) ? { restLeft: 0, restKey: null } : { restLeft: restSec, restKey: key })
+              };
+            })(),
+            diffColor: up ? 'oklch(0.38 0.045 185)' : 'oklch(0.53 0.008 70)',
+            done: isDone,
+            todo: !isDone,
+            toggle: () => this.setState(prev => {
+              const next = Object.assign({}, prev.done);
+              if (next[key]) { delete next[key]; return { done: next }; }
+              next[key] = true;
+              return { done: next };
+            })
+          };
+        })
+      };
+    });
+
+    const partList = ['すべて', '胸', '背中', '脚', '肩', '腕', '体幹'];
+
+    const latest = parseFloat((s.measurements[0] || {}).weight) || 72.4;
+    const all = this.weightSeries(latest);
+    const len = s.period === 'w' ? 7 : s.period === 'm' ? 30 : 90;
+    const ser = all.slice(-len);
+    const lo = Math.min.apply(null, ser), hi = Math.max.apply(null, ser);
+    const span = Math.max(0.6, hi - lo);
+    const yOf = v => 8 + (1 - (v - lo) / span) * 84;
+    const pts = ser.map((v, i) => (i / (ser.length - 1) * 300).toFixed(1) + ',' + yOf(v).toFixed(1));
+    const dW = latest - ser[0];
+
+    const N = this.nutrition();
+    const microNow = this.micro(N.eaten, N.T);
+    const microPv = this.micro(N.preview, N.T);
+    const remainKeys = { p: 'たんぱく質', ca: 'カルシウム', vc: 'ビタミンC', fe: '鉄', fib: '食物繊維' };
+    const units = { p: 'g', ca: 'mg', vc: 'mg', fe: 'mg', fib: 'g' };
+    const foods = this.foods().map((fd, idx) => {
+      const tags = [];
+      Object.keys(remainKeys).forEach(k => {
+        const rem = N.T[k] - N.preview[k];
+        if (rem > 0 && fd[k] >= rem * 0.2 && tags.length < 2) tags.push(remainKeys[k] + ' +' + fd[k] + units[k]);
+      });
+      return {
+        name: fd.name, tags, hasTags: tags.length > 0, idx,
+        detail: fd.serving + ' · ' + fd.kcal + 'kcal · P' + fd.p + ' F' + fd.f + ' C' + fd.c,
+        add: () => this.setState(st => ({ draft: st.draft.concat([Object.assign({ uid: Date.now() + Math.random() }, fd)]) }))
+      };
+    });
+    const fq0 = s.foodQuery.trim();
+    const shownFoods = fq0 === '' ? foods.slice().sort((a, b) => (b.tags.length - a.tags.length) || (a.idx - b.idx)) : foods.filter(f => f.name.indexOf(fq0) >= 0);
+    const draftK = s.draft.reduce((a, x) => a + x.kcal, 0);
+    const fmtK = v => Math.round(v).toLocaleString('ja-JP');
+    const CC = this.calc();
+    const Pf = s.profile;
+    const setP = (k, v) => this.setState(p => ({ profile: Object.assign({}, p.profile, { [k]: v }) }));
+    const numIn = k => e => setP(k, e.target.value.replace(/[^\d.]/g, ''));
+    const chip = (active) => active
+      ? { bg: 'oklch(0.38 0.045 185)', fg: '#fff', border: 'oklch(0.38 0.045 185)' }
+      : { bg: 'oklch(0.993 0.003 80)', fg: 'oklch(0.38 0.008 70)', border: 'oklch(0.88 0.008 70)' };
+    const opts = (list, key) => list.map(o => { const v = Array.isArray(o) ? o[0] : o; const c = chip(Pf[key] === v); return { label: Array.isArray(o) ? o[1] : String(o) + (key === 'freq' ? '回' : ''), bg: c.bg, fg: c.fg, border: c.border, pick: () => setP(key, v) }; });
+    const curDay = s.splitDays[Math.min(s.focus, s.splitDays.length - 1)] || { label: '全身', parts: ['全身'] };
+    const AI = this.aiMenu(Pf, curDay, s.aiVariant);
+    const SP = this.splitPresets();
+    const PARTS = ['胸', '背中', '脚', '肩', '二頭', '三頭', '腹筋', '臀部'];
+    const trainKcal = min => Math.round(5.0 * CC.wt * (min / 60) * 1.05);
+    const foodByName = {}; this.foods().forEach(fd => { foodByName[fd.name] = fd; });
+    const q = s.exQuery.trim();
+    const fq = s.foodQuery.trim();
+
+    return {
+      isHome: sc === 'home', isTrain: sc === 'train', isPicker: sc === 'picker',
+      isSession: sc === 'session', isMeal: sc === 'meal', isMealAdd: sc === 'mealadd',
+      isBody: sc === 'body', isPhotos: sc === 'photos', isLogin: sc === 'login', isMytre: sc === 'mytre', isSettings: sc === 'settings',
+      goSettings: this.go('settings'),
+      kcalBurn: fmtK(CC.tdee), targetW: CC.target.toFixed(1),
+      bmrLabel: fmtK(CC.bmr), tdeeLabel: fmtK(CC.tdee), tdeeAutoLabel: fmtK(CC.tdeeAuto), bmrMethod: CC.method,
+      tP: CC.p, tF: CC.f, tC: CC.c,
+      pAge: Pf.age, pHeight: Pf.height, pWeight: Pf.weight, pTarget: Pf.target, pBf: Pf.bf, pMaint: Pf.maint,
+      onAge: numIn('age'), onHeight: numIn('height'), onPWeight: numIn('weight'), onTarget: numIn('target'), onBf: numIn('bf'), onMaint: numIn('maint'),
+      sexOpts: [['male', '男性'], ['female', '女性']].map(o => ({ label: o[1], pick: () => setP('sex', o[0]), bg: Pf.sex === o[0] ? 'oklch(0.993 0.003 80)' : 'transparent', fg: Pf.sex === o[0] ? 'oklch(0.26 0.008 70)' : 'oklch(0.49 0.008 70)' })),
+      actOpts: [['low', 'ほぼ座りっぱなし', 'デスクワーク中心・運動習慣なし', '1.2'], ['light', '軽い活動', '立ち仕事が少しある・軽い運動 週1–2回', '1.375'], ['mid', '中程度', '通勤で歩く・運動 週3–5回', '1.55'], ['high', '活発', '立ち仕事中心・運動 週6–7回', '1.725'], ['vhigh', '非常に活発', '肉体労働・1日2回の練習など', '1.9']].map(o => {
+        const a = Pf.act === o[0];
+        return { label: o[1], desc: o[2], factor: o[3], pick: () => setP('act', o[0]),
+          bg: a ? 'oklch(0.965 0.012 185)' : 'transparent', border: a ? 'oklch(0.38 0.045 185)' : 'oklch(0.9 0.008 70)',
+          dot: a ? 'oklch(0.38 0.045 185)' : 'transparent', dotBorder: a ? 'oklch(0.38 0.045 185)' : 'oklch(0.75 0.008 70)' };
+      }),
+      goalOpts: opts(['減量', '体型維持', '筋肥大', '筋力アップ'], 'goal'),
+      expOpts: opts([['初心者', '初心者（〜半年）'], ['中級', '中級（半年〜3年）'], ['上級', '上級（3年以上）']], 'exp'),
+      freqOpts: opts([1, 2, 3, 4, 5, 6], 'freq'),
+      maintManual: !!Pf.maintManual,
+      maintBg: Pf.maintManual ? 'oklch(0.38 0.045 185)' : 'oklch(0.84 0.008 70)',
+      maintJustify: Pf.maintManual ? 'flex-end' : 'flex-start',
+      toggleMaint: () => setP('maintManual', !Pf.maintManual),
+
+      aiProfileLabel: Pf.exp + ' · ' + Pf.goal + ' · 週' + Pf.freq + '回',
+      splitName: s.split,
+      splitDesc: SP[s.split].desc,
+      splitIsCustom: s.split === 'カスタム',
+      todayDayNum: Math.min(s.focus, s.splitDays.length - 1) + 1,
+      todayDayLabel: this.dayLabel(curDay),
+      splitPanelOpen: s.splitPanel,
+      splitPanelLabel: s.splitPanel ? '閉じる' : '変更',
+      toggleSplitPanel: () => this.setState(p => ({ splitPanel: !p.splitPanel })),
+      splitOpts: Object.keys(SP).map(k => {
+        const c = chip(s.split === k);
+        return { label: k, bg: c.bg, fg: c.fg, border: c.border,
+          pick: () => this.setState(p => ({ split: k, splitEdit: null, focus: 0, aiSaved: false,
+            splitDays: SP[k].days ? SP[k].days.map(d => ({ label: d.label, parts: d.parts.slice() })) : p.splitDays.map(d => ({ label: '', parts: d.parts.filter(x => x !== '全身') })) })) };
+      }),
+      splitDays: s.splitDays.map((d, i) => {
+        const editing = s.splitEdit === i;
+        return {
+          num: i + 1, label: this.dayLabel(d), editing, editLabel: editing ? '完了' : '部位を編集',
+          toggleEdit: () => this.setState(p => ({ splitEdit: p.splitEdit === i ? null : i })),
+          partOpts: PARTS.map(pt => {
+            const c = chip(d.parts.indexOf(pt) >= 0);
+            return { label: pt, bg: c.bg, fg: c.fg, border: c.border,
+              pick: () => this.setState(p => {
+                const days = p.splitDays.map(x => ({ label: x.label, parts: x.parts.slice() }));
+                const ps = days[i].parts.filter(x => x !== '全身');
+                const at = ps.indexOf(pt);
+                if (at >= 0) ps.splice(at, 1); else ps.push(pt);
+                days[i] = { label: '', parts: ps };
+                return { splitDays: days, aiSaved: false };
+              }) };
+          })
+        };
+      }),
+      addSplitDay: () => this.setState(p => p.splitDays.length >= 7 ? {} : ({ splitDays: p.splitDays.concat([{ label: '', parts: [] }]), splitEdit: p.splitDays.length })),
+      removeSplitDay: () => this.setState(p => p.splitDays.length <= 1 ? {} : ({ splitDays: p.splitDays.slice(0, -1), splitEdit: null, focus: Math.min(p.focus, p.splitDays.length - 2) })),
+      focusOpts: s.splitDays.map((d, i) => {
+        const on = s.focus === i;
+        return { label: 'Day' + (i + 1) + ' ' + this.dayLabel(d), pick: () => this.setState({ focus: i, aiSaved: false }),
+          bg: on ? 'oklch(0.97 0.006 185)' : 'transparent', fg: on ? 'oklch(0.3 0.03 185)' : 'oklch(0.97 0.006 185)', border: on ? 'oklch(0.97 0.006 185)' : 'rgba(255,255,255,0.3)' };
+      }),
+      aiMenu: AI.menu, aiReason: AI.reason,
+      nextAiMenu: () => this.setState(p => ({ aiVariant: p.aiVariant + 1, aiSaved: false })),
+      saveAiLabel: s.aiSaved ? '保存しました' : 'マイトレに保存',
+      saveAiMenu: () => this.setState(p => p.aiSaved ? {} : ({ aiSaved: true, customRts: [{ name: 'AI提案 · ' + this.dayLabel(curDay), meta: Pf.exp + ' · ' + Pf.goal, last: '—', items: AI.menu.map(m => [m.name, m.plan, m.type]) }].concat(p.customRts) })),
+      rtCount: 3 + s.customRts.length,
+
+      mealTabs: [['list', 'マイリスト'], ['search', '検索'], ['photo', '写真']].map(t => ({ label: t[1], pick: () => this.setState({ mealTab: t[0] }), bg: s.mealTab === t[0] ? 'oklch(0.993 0.003 80)' : 'transparent', fg: s.mealTab === t[0] ? 'oklch(0.26 0.008 70)' : 'oklch(0.49 0.008 70)' })),
+      isListTab: s.mealTab === 'list', isSearchTab: s.mealTab === 'search', isPhotoTab: s.mealTab === 'photo',
+      mealLists: s.mealLists.map(ml => {
+        const fs = ml.foods.map(n => foodByName[n]).filter(Boolean);
+        const k = fs.reduce((a, x) => a + x.kcal, 0), pr = fs.reduce((a, x) => a + x.p, 0);
+        return { name: ml.name, items: fs.map(x => x.name.replace(/（.*）/, '') + ' ' + x.serving).join(' / '), summary: k + ' kcal · P ' + pr.toFixed(1) + 'g',
+          add: () => this.setState(p => ({ draft: p.draft.concat(fs.map(x => Object.assign({ uid: Date.now() + Math.random() }, x))), listSaved: false })) };
+      }),
+      listSaved: s.listSaved,
+      saveMealList: () => this.setState(p => ({ mealLists: p.mealLists.concat([{ name: 'マイリスト ' + (p.mealLists.length + 1), foods: p.draft.map(d => d.name) }]), listSaved: true })),
+      showNav: ['home', 'mytre', 'train', 'meal', 'body'].indexOf(sc) >= 0,
+      mytreInk: sc === 'mytre' ? 'oklch(0.3 0.045 185)' : 'oklch(0.48 0.008 70)',
+      mytrePill: sc === 'mytre' ? 'oklch(0.93 0.014 185)' : 'transparent',
+      goMytre: this.go('mytre'),
+
+      periods: [['w', '1週'], ['m', '1ヶ月'], ['3m', '3ヶ月']].map(p => ({
+        label: p[1],
+        select: e => { e.stopPropagation(); this.setState({ period: p[0] }); },
+        bg: s.period === p[0] ? 'oklch(0.993 0.003 80)' : 'transparent',
+        fg: s.period === p[0] ? 'oklch(0.26 0.008 70)' : 'oklch(0.49 0.008 70)'
+      })),
+      curWeight: latest.toFixed(1),
+      wDelta: (dW <= 0 ? '−' : '+') + Math.abs(dW).toFixed(1) + 'kg',
+      wPoints: pts.join(' '),
+      wArea: '0,100 ' + pts.join(' ') + ' 300,100',
+      wDotTop: yOf(latest).toFixed(1) + '%',
+      wMax: hi.toFixed(1), wMin: lo.toFixed(1),
+      wStart: s.period === 'w' ? '9/5' : s.period === 'm' ? '8/13' : '6/14',
+      toGoal: Math.max(0, latest - 70).toFixed(1),
+
+      kcalIn: fmtK(N.eaten.kcal), kcalTarget: fmtK(N.T.kcal),
+      kcalLeft: fmtK(Math.max(0, N.T.kcal - N.eaten.kcal)),
+      pfcRows: this.pfc(N.eaten, N.T),
+      microRows: s.microAll ? microNow : microNow.slice(0, 5),
+      microCaption: s.microAll ? '全16種 · 充足度が低い順' : '特に不足している5つ',
+      microToggleLabel: s.microAll ? '主な5つだけ表示' : 'すべての栄養素を見る（16種）',
+      toggleMicros: () => this.setState(p => ({ microAll: !p.microAll })),
+      micros: microNow.slice(0, 5).map(m => ({ name: m.name, pct: m.pct, color: m.color })),
+      aiAdvice: (() => {
+        const pLeft = Math.round(N.T.p - N.eaten.p);
+        const m1 = microNow[0], m2 = microNow[1];
+        const tips = [
+          (pLeft > 0 ? 'たんぱく質があと' + pLeft + 'g、' : '') + m1.name + 'が' + m1.left.replace('あと ', '') + '不足しています。夕食にギリシャヨーグルトと鶏むね肉を加えると、まとめて補えます。',
+          m2.name + 'も不足気味です。ブロッコリーやキウイを一品足すと、ビタミン類と食物繊維を一緒に補えます。',
+          '体重は1ヶ月で順調に減っています。今のカロリー収支（摂取 < 消費）を維持しつつ、たんぱく質を優先して筋肉量を守りましょう。'
+        ];
+        return tips[s.adviceIdx % tips.length];
+      })(),
+      nextAdvice: () => this.setState(p => ({ adviceIdx: p.adviceIdx + 1 })),
+
+      remainTitle: s.draft.length ? 'この食事を記録した後の残り' : '今日の残り',
+      pvKcalLeft: fmtK(Math.max(0, N.T.kcal - N.preview.kcal)),
+      pvPfc: this.pfc(N.preview, N.T),
+      pvMicroShort: microPv.filter(m => m.ratio < 0.8).slice(0, 5).map(m => ({ name: m.name, left: m.left })),
+      foodListTitle: fq0 === '' ? '不足を補うおすすめ' : '検索結果',
+      filteredFoods: shownFoods,
+      draftRows: s.draft.map(d => ({ name: d.name + ' ' + d.serving, kcal: d.kcal + ' kcal', remove: () => this.setState(st => ({ draft: st.draft.filter(x => x.uid !== d.uid) })) })),
+      hasDraft: s.draft.length > 0, noDraft: s.draft.length === 0,
+      draftTotal: fmtK(draftK) + ' kcal',
+      commitMeal: () => this.setState(st => ({ logged: st.logged.concat(st.draft), draft: [], foodQuery: '', screen: 'home', listSaved: false })),
+
+      homeInk: sc === 'home' ? 'oklch(0.3 0.045 185)' : 'oklch(0.48 0.008 70)',
+      trainInk: sc === 'train' ? 'oklch(0.3 0.045 185)' : 'oklch(0.48 0.008 70)',
+      mealInk: sc === 'meal' ? 'oklch(0.3 0.045 185)' : 'oklch(0.48 0.008 70)',
+      bodyInk: sc === 'body' ? 'oklch(0.3 0.045 185)' : 'oklch(0.48 0.008 70)',
+      homePill: sc === 'home' ? 'oklch(0.93 0.014 185)' : 'transparent',
+      trainPill: sc === 'train' ? 'oklch(0.93 0.014 185)' : 'transparent',
+      mealPill: sc === 'meal' ? 'oklch(0.93 0.014 185)' : 'transparent',
+      bodyPill: sc === 'body' ? 'oklch(0.93 0.014 185)' : 'transparent',
+
+      goHome: this.go('home'), goTrain: this.go('train'), goPicker: this.go('picker'),
+      goMeal: this.go('meal'), goMealAdd: this.go('mealadd'), goBody: this.go('body'),
+      goPhotos: this.go('photos'), goLogin: this.go('login'),
+      goSession: () => this.setState({ screen: 'session', paused: false }),
+      paused: s.paused,
+      interruptSession: () => this.setState({ paused: true, screen: 'train', restLeft: 0, restKey: null, typeOpen: null }),
+      finishSession: () => this.setState(p => {
+        const n = Object.keys(p.done).length;
+        const entry = { name: 'プッシュ A', meta: (p.paused ? '途中終了 · ' : '') + '2種目 · ' + Math.max(1, Math.round(p.seconds / 60)) + '分', min: Math.max(1, Math.round(p.seconds / 60)), sets: n + 'セット', date: '9/11' };
+        return { doneHistory: n ? [entry].concat(p.doneHistory) : p.doneHistory, done: {}, edits: {}, extra: {}, paused: false, screen: 'train', restLeft: 0, restKey: null };
+      }),
+
+      elapsed: this.fmt(s.seconds),
+      resting: showRest && s.restLeft > 0,
+      restOn: showRest,
+      restSecLabel: restSec + '秒',
+      setGrid: showRest ? '20px minmax(0,1.3fr) minmax(0,1fr) 50px 44px 44px' : '22px minmax(0,1.3fr) minmax(0,1fr) 64px 52px',
+      switchBg: showRest ? 'oklch(0.38 0.045 185)' : 'oklch(0.84 0.008 70)',
+      switchJustify: showRest ? 'flex-end' : 'flex-start',
+      toggleRestOn: () => this.setState(p => ({ restOn: !(p.restOn ?? (this.props.showRestTimer !== false)), restLeft: 0, restKey: null })),
+      restLabel: this.fmt(s.restLeft),
+      skipRest: () => this.setState({ restLeft: 0, restKey: null }),
+      exercises, totalSets: total, doneCount: done,
+      unitLabel: '重量(' + unit + ')',
+
+      exQuery: s.exQuery,
+      onExQuery: e => this.setState({ exQuery: e.target.value }),
+      parts: partList.map(p => ({
+        label: p,
+        select: () => this.setState({ part: p }),
+        bg: s.part === p ? 'oklch(0.38 0.045 185)' : '#fff',
+        fg: s.part === p ? '#fff' : 'oklch(0.42 0.008 70)',
+        border: s.part === p ? 'oklch(0.38 0.045 185)' : 'oklch(0.9 0.008 70)'
+      })),
+      filteredExercises: this.library().filter(e =>
+        (s.part === 'すべて' || e.part === s.part) && (q === '' || e.name.indexOf(q) >= 0)),
+
+      foodQuery: s.foodQuery,
+      onFoodQuery: e => this.setState({ foodQuery: e.target.value }),
+
+      wVal: s.w, fVal: s.f, mVal: s.m,
+      onW: e => this.setState({ w: e.target.value }),
+      onF: e => this.setState({ f: e.target.value }),
+      onM: e => this.setState({ m: e.target.value }),
+      saveWeight: () => this.setState(st => {
+        if (!st.w.trim() || isNaN(parseFloat(st.w))) return {};
+        const parts = [];
+        if (st.f.trim()) parts.push('体脂肪率 ' + st.f + '%');
+        if (st.m.trim()) parts.push('筋肉量 ' + st.m + 'kg');
+        return {
+          w: '', f: '', m: '',
+          measurements: [{ id: Date.now(), date: '9/11', weight: parseFloat(st.w) + ' kg', sub: parts.length ? parts.join(' / ') : '—' }].concat(st.measurements)
+        };
+      }),
+      measurements: s.measurements.map(m => Object.assign({}, m, {
+        remove: () => this.setState(st => ({ measurements: st.measurements.filter(x => x.id !== m.id) }))
+      })),
+
+      routines: (() => {
+        const TY = this.setTypes();
+        const data = [
+          { name: 'プッシュ A', meta: '胸・肩・三頭 · 約45分', last: '9/5', items: [
+            ['ベンチプレス', '4セット × 6–10回', 'ピラミッド'], ['ショルダープレス', '3セット × 8–10回', 'ストレート'],
+            ['インクラインダンベルプレス', '3セット × 10回', 'スーパー'], ['ケーブルフライ', '2セット × 15回', 'スーパー'] ] },
+          { name: 'プル B', meta: '背中・二頭 · 約50分', last: '9/9', items: [
+            ['ラットプルダウン', '4セット × 10回', 'ストレート'], ['ベントオーバーロウ', '3セット × 8回', 'ストレート'],
+            ['デッドリフト', '3セット × 5回', 'ピラミッド'], ['バーベルカール', '3セット × 10回', 'ドロップ'] ] },
+          { name: 'レッグ', meta: '脚・体幹 · 約60分', last: '9/7', items: [
+            ['バーベルスクワット', '4セット × 6回', 'ピラミッド'], ['レッグプレス', '3セット × 10回', 'ジャイアント'],
+            ['レッグカール', '3セット × 12回', 'ジャイアント'], ['プランク', '3セット × 60秒', 'ジャイアント'] ] }
+        ];
+        return s.customRts.concat(data).map((r, ri) => {
+          const editing = s.editRt === ri;
+          return {
+            name: r.name, meta: r.meta, last: r.last,
+            editLabel: editing ? '完了' : '編集',
+            editBg: editing ? 'oklch(0.3 0.008 70)' : 'transparent',
+            editFg: editing ? '#fff' : 'oklch(0.4 0.008 70)',
+            toggleEdit: () => this.setState(p => ({ editRt: p.editRt === ri ? null : ri })),
+            items: r.items.map((it, ii) => {
+              const key = ri + '-' + ii;
+              const t = s.rtTypes[key] || it[2];
+              const st0 = this.typeStyle(t, false);
+              return {
+                name: it[0], plan: it[1], type: t, typeBg: st0.bg, typeFg: st0.fg, editing,
+                options: Object.keys(TY).map(o => {
+                  const so = this.typeStyle(o, o === t);
+                  return { label: o, bg: so.bg, fg: so.fg, border: so.border,
+                    pick: () => this.setState(p => ({ rtTypes: Object.assign({}, p.rtTypes, { [key]: o }) })) };
+                })
+              };
+            })
+          };
+        });
+      })(),
+      history: s.doneHistory.concat([
+        { name: 'プル B', meta: '5種目 · 52分', min: 52, sets: '18セット', date: '9/9' },
+        { name: 'レッグ', meta: '6種目 · 61分', min: 61, sets: '21セット', date: '9/7' },
+        { name: 'プッシュ A', meta: '4種目 · 44分', min: 44, sets: '14セット', date: '9/5' },
+        { name: 'プル B', meta: '5種目 · 49分', min: 49, sets: '17セット', date: '9/3' }
+      ]).map(x => Object.assign({}, x, { kcal: trainKcal(x.min) + ' kcal' })),
+      meals: [
+        { time: '08:05', title: '朝食', items: '鶏むね肉 150g / 白米 200g / 納豆 1パック', kcal: '596 kcal', pfc: 'P 42.5g · F 8.2g · C 79.6g' },
+        { time: '12:40', title: '昼食', items: 'サラダチキン弁当', kcal: '620 kcal', pfc: 'P 38.0g · F 18.4g · C 62.1g' },
+        { time: '15:10', title: '間食', items: 'プロテイン 1杯', kcal: '204 kcal', pfc: 'P 24.0g · F 1.5g · C 8.3g' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
