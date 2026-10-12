@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'database/app_database.dart';
+import 'screens/home_screen.dart';
 import 'screens/meal_screen.dart';
 import 'screens/my_training_list_screen.dart';
-import 'screens/profile_screen.dart';
 import 'screens/weight_screen.dart';
 import 'screens/workout_home_screen.dart';
 
@@ -49,9 +49,7 @@ class FitnessApp extends StatelessWidget {
 //
 // docs/design/README.md の「共通レイアウト」にある5タブ構成
 // (ホーム / マイトレ / 筋トレ / 食事 / からだ)をそのまま採用している。
-// 今回実装したのは「マイトレ」「筋トレ」と、既存の「からだ」のみ。
-// 「ホーム」「食事」はまだ中身が無いため、準備中の仮画面を表示する
-// (タブ構成自体は先に用意しておくことで、次フェーズでの差し替えを楽にする狙い)。
+// 起動時はホームを表示し、ホームの体重カードから「からだ」タブへ移動できる。
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key, required this.database});
 
@@ -62,27 +60,14 @@ class HomeShell extends StatefulWidget {
 }
 
 class _HomeShellState extends State<HomeShell> {
-  int _index = 2; // 初期タブは「筋トレ」(今回の実装範囲の中心)
+  int _index = 0; // 初期タブは「ホーム」
 
   @override
   Widget build(BuildContext context) {
     final tabs = [
-      _ComingSoonScreen(
-        title: 'ホーム',
-        // README「1. ホーム」: 右上の丸ボタン「設定」→基本情報画面。
-        // ホーム画面自体(体重推移カード等)はまだ未実装だが、設定への入り口だけ先に用意する。
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            tooltip: '基本情報',
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ProfileScreen(database: widget.database),
-              ),
-            ),
-          ),
-        ],
+      HomeScreen(
+        database: widget.database,
+        onOpenBody: () => setState(() => _index = 4),
       ),
       MyTrainingListScreen(database: widget.database),
       WorkoutHomeScreen(database: widget.database),
@@ -98,30 +83,23 @@ class _HomeShellState extends State<HomeShell> {
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home_outlined), label: 'ホーム'),
           NavigationDestination(
-              icon: Icon(Icons.list_alt_outlined), label: 'マイトレ'),
+            icon: Icon(Icons.list_alt_outlined),
+            label: 'マイトレ',
+          ),
           NavigationDestination(
-              icon: Icon(Icons.fitness_center_outlined), label: '筋トレ'),
+            icon: Icon(Icons.fitness_center_outlined),
+            label: '筋トレ',
+          ),
           NavigationDestination(
-              icon: Icon(Icons.restaurant_outlined), label: '食事'),
+            icon: Icon(Icons.restaurant_outlined),
+            label: '食事',
+          ),
           NavigationDestination(
-              icon: Icon(Icons.monitor_weight_outlined), label: 'からだ'),
+            icon: Icon(Icons.monitor_weight_outlined),
+            label: 'からだ',
+          ),
         ],
       ),
-    );
-  }
-}
-
-class _ComingSoonScreen extends StatelessWidget {
-  const _ComingSoonScreen({required this.title, this.actions});
-
-  final String title;
-  final List<Widget>? actions;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title), actions: actions),
-      body: const Center(child: Text('準備中')),
     );
   }
 }
