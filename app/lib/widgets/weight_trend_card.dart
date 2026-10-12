@@ -86,10 +86,11 @@ class _WeightTrendCardState extends State<WeightTrendCard> {
                   const Spacer(),
                   SegmentedButton<int>(
                     showSelectedIcon: false,
-                    style: const ButtonStyle(
+                    style: ButtonStyle(
                       visualDensity: VisualDensity.compact,
+                      // テーマの文字スタイル(フォント等)を引き継ぎつつ小さくする。
                       textStyle: WidgetStatePropertyAll(
-                        TextStyle(fontSize: 11),
+                        Theme.of(context).textTheme.labelSmall,
                       ),
                     ),
                     segments: [
