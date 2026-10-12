@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'database/app_database.dart';
 import 'screens/my_training_list_screen.dart';
+import 'screens/profile_screen.dart';
 import 'screens/weight_screen.dart';
 import 'screens/workout_home_screen.dart';
 
@@ -64,7 +65,23 @@ class _HomeShellState extends State<HomeShell> {
   @override
   Widget build(BuildContext context) {
     final tabs = [
-      const _ComingSoonScreen(title: 'ホーム'),
+      _ComingSoonScreen(
+        title: 'ホーム',
+        // README「1. ホーム」: 右上の丸ボタン「設定」→基本情報画面。
+        // ホーム画面自体(体重推移カード等)はまだ未実装だが、設定への入り口だけ先に用意する。
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            tooltip: '基本情報',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProfileScreen(database: widget.database),
+              ),
+            ),
+          ),
+        ],
+      ),
       MyTrainingListScreen(database: widget.database),
       WorkoutHomeScreen(database: widget.database),
       const _ComingSoonScreen(title: '食事'),
@@ -93,14 +110,15 @@ class _HomeShellState extends State<HomeShell> {
 }
 
 class _ComingSoonScreen extends StatelessWidget {
-  const _ComingSoonScreen({required this.title});
+  const _ComingSoonScreen({required this.title, this.actions});
 
   final String title;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(title: Text(title), actions: actions),
       body: const Center(child: Text('準備中')),
     );
   }

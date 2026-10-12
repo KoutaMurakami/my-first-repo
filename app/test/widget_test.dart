@@ -87,4 +87,42 @@ void main() {
     await tester.pump(const Duration(milliseconds: 1));
     await database.close();
   });
+
+  testWidgets('基本情報を入力して保存すると、再度開いた時も値が残っている', (WidgetTester tester) async {
+    final database = AppDatabase.forTesting();
+
+    await tester.pumpWidget(FitnessApp(database: database));
+    await tester.pump();
+
+    // ホームタブの設定ボタンから基本情報画面を開く。
+    await tester.tap(find.widgetWithText(NavigationDestination, 'ホーム'));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.widgetWithText(TextField, '年齢'), '30');
+    await tester.enterText(find.widgetWithText(TextField, '身長'), '175');
+    await tester.enterText(find.widgetWithText(TextField, '体重'), '70');
+    await tester.pump();
+
+    // 入力に応じてサマリカードの目標摂取kcalが再計算されて表示されることを確認。
+    expect(find.textContaining('kcal'), findsWidgets);
+
+    await tester.tap(find.text('保存する').first);
+    await tester.pumpAndSettle();
+    expect(find.text('保存しました'), findsOneWidget);
+
+    // 画面を出てから再度開き、入力した値が読み込まれることを確認する。
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+
+    expect(find.widgetWithText(TextField, '30'), findsOneWidget);
+    expect(find.widgetWithText(TextField, '70'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(milliseconds: 1));
+    await database.close();
+  });
 }

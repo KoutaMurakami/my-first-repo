@@ -2857,6 +2857,1595 @@ class MyTrainingListItemsCompanion extends UpdateCompanion<MyTrainingListItem> {
   }
 }
 
+class $TrainingSplitsTable extends TrainingSplits
+    with TableInfo<$TrainingSplitsTable, TrainingSplit> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TrainingSplitsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _presetMeta = const VerificationMeta('preset');
+  @override
+  late final GeneratedColumn<String> preset = GeneratedColumn<String>(
+    'preset',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, preset];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'training_splits';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TrainingSplit> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('preset')) {
+      context.handle(
+        _presetMeta,
+        preset.isAcceptableOrUnknown(data['preset']!, _presetMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_presetMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TrainingSplit map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TrainingSplit(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      preset: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}preset'],
+      )!,
+    );
+  }
+
+  @override
+  $TrainingSplitsTable createAlias(String alias) {
+    return $TrainingSplitsTable(attachedDatabase, alias);
+  }
+}
+
+class TrainingSplit extends DataClass implements Insertable<TrainingSplit> {
+  final int id;
+  final String preset;
+  const TrainingSplit({required this.id, required this.preset});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['preset'] = Variable<String>(preset);
+    return map;
+  }
+
+  TrainingSplitsCompanion toCompanion(bool nullToAbsent) {
+    return TrainingSplitsCompanion(id: Value(id), preset: Value(preset));
+  }
+
+  factory TrainingSplit.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TrainingSplit(
+      id: serializer.fromJson<int>(json['id']),
+      preset: serializer.fromJson<String>(json['preset']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'preset': serializer.toJson<String>(preset),
+    };
+  }
+
+  TrainingSplit copyWith({int? id, String? preset}) =>
+      TrainingSplit(id: id ?? this.id, preset: preset ?? this.preset);
+  TrainingSplit copyWithCompanion(TrainingSplitsCompanion data) {
+    return TrainingSplit(
+      id: data.id.present ? data.id.value : this.id,
+      preset: data.preset.present ? data.preset.value : this.preset,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TrainingSplit(')
+          ..write('id: $id, ')
+          ..write('preset: $preset')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, preset);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TrainingSplit &&
+          other.id == this.id &&
+          other.preset == this.preset);
+}
+
+class TrainingSplitsCompanion extends UpdateCompanion<TrainingSplit> {
+  final Value<int> id;
+  final Value<String> preset;
+  const TrainingSplitsCompanion({
+    this.id = const Value.absent(),
+    this.preset = const Value.absent(),
+  });
+  TrainingSplitsCompanion.insert({
+    this.id = const Value.absent(),
+    required String preset,
+  }) : preset = Value(preset);
+  static Insertable<TrainingSplit> custom({
+    Expression<int>? id,
+    Expression<String>? preset,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (preset != null) 'preset': preset,
+    });
+  }
+
+  TrainingSplitsCompanion copyWith({Value<int>? id, Value<String>? preset}) {
+    return TrainingSplitsCompanion(
+      id: id ?? this.id,
+      preset: preset ?? this.preset,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (preset.present) {
+      map['preset'] = Variable<String>(preset.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TrainingSplitsCompanion(')
+          ..write('id: $id, ')
+          ..write('preset: $preset')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SplitDaysTable extends SplitDays
+    with TableInfo<$SplitDaysTable, SplitDay> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SplitDaysTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _splitIdMeta = const VerificationMeta(
+    'splitId',
+  );
+  @override
+  late final GeneratedColumn<int> splitId = GeneratedColumn<int>(
+    'split_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES training_splits (id)',
+    ),
+  );
+  static const VerificationMeta _orderIndexMeta = const VerificationMeta(
+    'orderIndex',
+  );
+  @override
+  late final GeneratedColumn<int> orderIndex = GeneratedColumn<int>(
+    'order_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _labelMeta = const VerificationMeta('label');
+  @override
+  late final GeneratedColumn<String> label = GeneratedColumn<String>(
+    'label',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, splitId, orderIndex, label];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'split_days';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SplitDay> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('split_id')) {
+      context.handle(
+        _splitIdMeta,
+        splitId.isAcceptableOrUnknown(data['split_id']!, _splitIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_splitIdMeta);
+    }
+    if (data.containsKey('order_index')) {
+      context.handle(
+        _orderIndexMeta,
+        orderIndex.isAcceptableOrUnknown(data['order_index']!, _orderIndexMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_orderIndexMeta);
+    }
+    if (data.containsKey('label')) {
+      context.handle(
+        _labelMeta,
+        label.isAcceptableOrUnknown(data['label']!, _labelMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SplitDay map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SplitDay(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      splitId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}split_id'],
+      )!,
+      orderIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}order_index'],
+      )!,
+      label: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}label'],
+      ),
+    );
+  }
+
+  @override
+  $SplitDaysTable createAlias(String alias) {
+    return $SplitDaysTable(attachedDatabase, alias);
+  }
+}
+
+class SplitDay extends DataClass implements Insertable<SplitDay> {
+  final int id;
+  final int splitId;
+  final int orderIndex;
+  final String? label;
+  const SplitDay({
+    required this.id,
+    required this.splitId,
+    required this.orderIndex,
+    this.label,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['split_id'] = Variable<int>(splitId);
+    map['order_index'] = Variable<int>(orderIndex);
+    if (!nullToAbsent || label != null) {
+      map['label'] = Variable<String>(label);
+    }
+    return map;
+  }
+
+  SplitDaysCompanion toCompanion(bool nullToAbsent) {
+    return SplitDaysCompanion(
+      id: Value(id),
+      splitId: Value(splitId),
+      orderIndex: Value(orderIndex),
+      label: label == null && nullToAbsent
+          ? const Value.absent()
+          : Value(label),
+    );
+  }
+
+  factory SplitDay.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SplitDay(
+      id: serializer.fromJson<int>(json['id']),
+      splitId: serializer.fromJson<int>(json['splitId']),
+      orderIndex: serializer.fromJson<int>(json['orderIndex']),
+      label: serializer.fromJson<String?>(json['label']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'splitId': serializer.toJson<int>(splitId),
+      'orderIndex': serializer.toJson<int>(orderIndex),
+      'label': serializer.toJson<String?>(label),
+    };
+  }
+
+  SplitDay copyWith({
+    int? id,
+    int? splitId,
+    int? orderIndex,
+    Value<String?> label = const Value.absent(),
+  }) => SplitDay(
+    id: id ?? this.id,
+    splitId: splitId ?? this.splitId,
+    orderIndex: orderIndex ?? this.orderIndex,
+    label: label.present ? label.value : this.label,
+  );
+  SplitDay copyWithCompanion(SplitDaysCompanion data) {
+    return SplitDay(
+      id: data.id.present ? data.id.value : this.id,
+      splitId: data.splitId.present ? data.splitId.value : this.splitId,
+      orderIndex: data.orderIndex.present
+          ? data.orderIndex.value
+          : this.orderIndex,
+      label: data.label.present ? data.label.value : this.label,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SplitDay(')
+          ..write('id: $id, ')
+          ..write('splitId: $splitId, ')
+          ..write('orderIndex: $orderIndex, ')
+          ..write('label: $label')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, splitId, orderIndex, label);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SplitDay &&
+          other.id == this.id &&
+          other.splitId == this.splitId &&
+          other.orderIndex == this.orderIndex &&
+          other.label == this.label);
+}
+
+class SplitDaysCompanion extends UpdateCompanion<SplitDay> {
+  final Value<int> id;
+  final Value<int> splitId;
+  final Value<int> orderIndex;
+  final Value<String?> label;
+  const SplitDaysCompanion({
+    this.id = const Value.absent(),
+    this.splitId = const Value.absent(),
+    this.orderIndex = const Value.absent(),
+    this.label = const Value.absent(),
+  });
+  SplitDaysCompanion.insert({
+    this.id = const Value.absent(),
+    required int splitId,
+    required int orderIndex,
+    this.label = const Value.absent(),
+  }) : splitId = Value(splitId),
+       orderIndex = Value(orderIndex);
+  static Insertable<SplitDay> custom({
+    Expression<int>? id,
+    Expression<int>? splitId,
+    Expression<int>? orderIndex,
+    Expression<String>? label,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (splitId != null) 'split_id': splitId,
+      if (orderIndex != null) 'order_index': orderIndex,
+      if (label != null) 'label': label,
+    });
+  }
+
+  SplitDaysCompanion copyWith({
+    Value<int>? id,
+    Value<int>? splitId,
+    Value<int>? orderIndex,
+    Value<String?>? label,
+  }) {
+    return SplitDaysCompanion(
+      id: id ?? this.id,
+      splitId: splitId ?? this.splitId,
+      orderIndex: orderIndex ?? this.orderIndex,
+      label: label ?? this.label,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (splitId.present) {
+      map['split_id'] = Variable<int>(splitId.value);
+    }
+    if (orderIndex.present) {
+      map['order_index'] = Variable<int>(orderIndex.value);
+    }
+    if (label.present) {
+      map['label'] = Variable<String>(label.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SplitDaysCompanion(')
+          ..write('id: $id, ')
+          ..write('splitId: $splitId, ')
+          ..write('orderIndex: $orderIndex, ')
+          ..write('label: $label')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SplitDayPartsTable extends SplitDayParts
+    with TableInfo<$SplitDayPartsTable, SplitDayPart> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SplitDayPartsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _splitDayIdMeta = const VerificationMeta(
+    'splitDayId',
+  );
+  @override
+  late final GeneratedColumn<int> splitDayId = GeneratedColumn<int>(
+    'split_day_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES split_days (id)',
+    ),
+  );
+  static const VerificationMeta _bodyPartMeta = const VerificationMeta(
+    'bodyPart',
+  );
+  @override
+  late final GeneratedColumn<String> bodyPart = GeneratedColumn<String>(
+    'body_part',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, splitDayId, bodyPart];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'split_day_parts';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SplitDayPart> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('split_day_id')) {
+      context.handle(
+        _splitDayIdMeta,
+        splitDayId.isAcceptableOrUnknown(
+          data['split_day_id']!,
+          _splitDayIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_splitDayIdMeta);
+    }
+    if (data.containsKey('body_part')) {
+      context.handle(
+        _bodyPartMeta,
+        bodyPart.isAcceptableOrUnknown(data['body_part']!, _bodyPartMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_bodyPartMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SplitDayPart map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SplitDayPart(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      splitDayId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}split_day_id'],
+      )!,
+      bodyPart: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}body_part'],
+      )!,
+    );
+  }
+
+  @override
+  $SplitDayPartsTable createAlias(String alias) {
+    return $SplitDayPartsTable(attachedDatabase, alias);
+  }
+}
+
+class SplitDayPart extends DataClass implements Insertable<SplitDayPart> {
+  final int id;
+  final int splitDayId;
+  final String bodyPart;
+  const SplitDayPart({
+    required this.id,
+    required this.splitDayId,
+    required this.bodyPart,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['split_day_id'] = Variable<int>(splitDayId);
+    map['body_part'] = Variable<String>(bodyPart);
+    return map;
+  }
+
+  SplitDayPartsCompanion toCompanion(bool nullToAbsent) {
+    return SplitDayPartsCompanion(
+      id: Value(id),
+      splitDayId: Value(splitDayId),
+      bodyPart: Value(bodyPart),
+    );
+  }
+
+  factory SplitDayPart.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SplitDayPart(
+      id: serializer.fromJson<int>(json['id']),
+      splitDayId: serializer.fromJson<int>(json['splitDayId']),
+      bodyPart: serializer.fromJson<String>(json['bodyPart']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'splitDayId': serializer.toJson<int>(splitDayId),
+      'bodyPart': serializer.toJson<String>(bodyPart),
+    };
+  }
+
+  SplitDayPart copyWith({int? id, int? splitDayId, String? bodyPart}) =>
+      SplitDayPart(
+        id: id ?? this.id,
+        splitDayId: splitDayId ?? this.splitDayId,
+        bodyPart: bodyPart ?? this.bodyPart,
+      );
+  SplitDayPart copyWithCompanion(SplitDayPartsCompanion data) {
+    return SplitDayPart(
+      id: data.id.present ? data.id.value : this.id,
+      splitDayId: data.splitDayId.present
+          ? data.splitDayId.value
+          : this.splitDayId,
+      bodyPart: data.bodyPart.present ? data.bodyPart.value : this.bodyPart,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SplitDayPart(')
+          ..write('id: $id, ')
+          ..write('splitDayId: $splitDayId, ')
+          ..write('bodyPart: $bodyPart')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, splitDayId, bodyPart);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SplitDayPart &&
+          other.id == this.id &&
+          other.splitDayId == this.splitDayId &&
+          other.bodyPart == this.bodyPart);
+}
+
+class SplitDayPartsCompanion extends UpdateCompanion<SplitDayPart> {
+  final Value<int> id;
+  final Value<int> splitDayId;
+  final Value<String> bodyPart;
+  const SplitDayPartsCompanion({
+    this.id = const Value.absent(),
+    this.splitDayId = const Value.absent(),
+    this.bodyPart = const Value.absent(),
+  });
+  SplitDayPartsCompanion.insert({
+    this.id = const Value.absent(),
+    required int splitDayId,
+    required String bodyPart,
+  }) : splitDayId = Value(splitDayId),
+       bodyPart = Value(bodyPart);
+  static Insertable<SplitDayPart> custom({
+    Expression<int>? id,
+    Expression<int>? splitDayId,
+    Expression<String>? bodyPart,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (splitDayId != null) 'split_day_id': splitDayId,
+      if (bodyPart != null) 'body_part': bodyPart,
+    });
+  }
+
+  SplitDayPartsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? splitDayId,
+    Value<String>? bodyPart,
+  }) {
+    return SplitDayPartsCompanion(
+      id: id ?? this.id,
+      splitDayId: splitDayId ?? this.splitDayId,
+      bodyPart: bodyPart ?? this.bodyPart,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (splitDayId.present) {
+      map['split_day_id'] = Variable<int>(splitDayId.value);
+    }
+    if (bodyPart.present) {
+      map['body_part'] = Variable<String>(bodyPart.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SplitDayPartsCompanion(')
+          ..write('id: $id, ')
+          ..write('splitDayId: $splitDayId, ')
+          ..write('bodyPart: $bodyPart')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProfilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _sexMeta = const VerificationMeta('sex');
+  @override
+  late final GeneratedColumn<String> sex = GeneratedColumn<String>(
+    'sex',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('male'),
+  );
+  static const VerificationMeta _ageMeta = const VerificationMeta('age');
+  @override
+  late final GeneratedColumn<int> age = GeneratedColumn<int>(
+    'age',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _heightCmMeta = const VerificationMeta(
+    'heightCm',
+  );
+  @override
+  late final GeneratedColumn<double> heightCm = GeneratedColumn<double>(
+    'height_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _weightKgMeta = const VerificationMeta(
+    'weightKg',
+  );
+  @override
+  late final GeneratedColumn<double> weightKg = GeneratedColumn<double>(
+    'weight_kg',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _targetWeightKgMeta = const VerificationMeta(
+    'targetWeightKg',
+  );
+  @override
+  late final GeneratedColumn<double> targetWeightKg = GeneratedColumn<double>(
+    'target_weight_kg',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bodyFatPctMeta = const VerificationMeta(
+    'bodyFatPct',
+  );
+  @override
+  late final GeneratedColumn<double> bodyFatPct = GeneratedColumn<double>(
+    'body_fat_pct',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _activityLevelMeta = const VerificationMeta(
+    'activityLevel',
+  );
+  @override
+  late final GeneratedColumn<String> activityLevel = GeneratedColumn<String>(
+    'activity_level',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('mid'),
+  );
+  static const VerificationMeta _goalMeta = const VerificationMeta('goal');
+  @override
+  late final GeneratedColumn<String> goal = GeneratedColumn<String>(
+    'goal',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('体型維持'),
+  );
+  static const VerificationMeta _experienceLevelMeta = const VerificationMeta(
+    'experienceLevel',
+  );
+  @override
+  late final GeneratedColumn<String> experienceLevel = GeneratedColumn<String>(
+    'experience_level',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('初心者'),
+  );
+  static const VerificationMeta _weeklyFreqMeta = const VerificationMeta(
+    'weeklyFreq',
+  );
+  @override
+  late final GeneratedColumn<int> weeklyFreq = GeneratedColumn<int>(
+    'weekly_freq',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(3),
+  );
+  static const VerificationMeta _activeSplitIdMeta = const VerificationMeta(
+    'activeSplitId',
+  );
+  @override
+  late final GeneratedColumn<int> activeSplitId = GeneratedColumn<int>(
+    'active_split_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES training_splits (id)',
+    ),
+  );
+  static const VerificationMeta _maintenanceManualMeta = const VerificationMeta(
+    'maintenanceManual',
+  );
+  @override
+  late final GeneratedColumn<bool> maintenanceManual = GeneratedColumn<bool>(
+    'maintenance_manual',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("maintenance_manual" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _maintenanceKcalManualMeta =
+      const VerificationMeta('maintenanceKcalManual');
+  @override
+  late final GeneratedColumn<double> maintenanceKcalManual =
+      GeneratedColumn<double>(
+        'maintenance_kcal_manual',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    sex,
+    age,
+    heightCm,
+    weightKg,
+    targetWeightKg,
+    bodyFatPct,
+    activityLevel,
+    goal,
+    experienceLevel,
+    weeklyFreq,
+    activeSplitId,
+    maintenanceManual,
+    maintenanceKcalManual,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'profiles';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Profile> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('sex')) {
+      context.handle(
+        _sexMeta,
+        sex.isAcceptableOrUnknown(data['sex']!, _sexMeta),
+      );
+    }
+    if (data.containsKey('age')) {
+      context.handle(
+        _ageMeta,
+        age.isAcceptableOrUnknown(data['age']!, _ageMeta),
+      );
+    }
+    if (data.containsKey('height_cm')) {
+      context.handle(
+        _heightCmMeta,
+        heightCm.isAcceptableOrUnknown(data['height_cm']!, _heightCmMeta),
+      );
+    }
+    if (data.containsKey('weight_kg')) {
+      context.handle(
+        _weightKgMeta,
+        weightKg.isAcceptableOrUnknown(data['weight_kg']!, _weightKgMeta),
+      );
+    }
+    if (data.containsKey('target_weight_kg')) {
+      context.handle(
+        _targetWeightKgMeta,
+        targetWeightKg.isAcceptableOrUnknown(
+          data['target_weight_kg']!,
+          _targetWeightKgMeta,
+        ),
+      );
+    }
+    if (data.containsKey('body_fat_pct')) {
+      context.handle(
+        _bodyFatPctMeta,
+        bodyFatPct.isAcceptableOrUnknown(
+          data['body_fat_pct']!,
+          _bodyFatPctMeta,
+        ),
+      );
+    }
+    if (data.containsKey('activity_level')) {
+      context.handle(
+        _activityLevelMeta,
+        activityLevel.isAcceptableOrUnknown(
+          data['activity_level']!,
+          _activityLevelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('goal')) {
+      context.handle(
+        _goalMeta,
+        goal.isAcceptableOrUnknown(data['goal']!, _goalMeta),
+      );
+    }
+    if (data.containsKey('experience_level')) {
+      context.handle(
+        _experienceLevelMeta,
+        experienceLevel.isAcceptableOrUnknown(
+          data['experience_level']!,
+          _experienceLevelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('weekly_freq')) {
+      context.handle(
+        _weeklyFreqMeta,
+        weeklyFreq.isAcceptableOrUnknown(data['weekly_freq']!, _weeklyFreqMeta),
+      );
+    }
+    if (data.containsKey('active_split_id')) {
+      context.handle(
+        _activeSplitIdMeta,
+        activeSplitId.isAcceptableOrUnknown(
+          data['active_split_id']!,
+          _activeSplitIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('maintenance_manual')) {
+      context.handle(
+        _maintenanceManualMeta,
+        maintenanceManual.isAcceptableOrUnknown(
+          data['maintenance_manual']!,
+          _maintenanceManualMeta,
+        ),
+      );
+    }
+    if (data.containsKey('maintenance_kcal_manual')) {
+      context.handle(
+        _maintenanceKcalManualMeta,
+        maintenanceKcalManual.isAcceptableOrUnknown(
+          data['maintenance_kcal_manual']!,
+          _maintenanceKcalManualMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Profile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Profile(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      sex: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sex'],
+      )!,
+      age: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}age'],
+      ),
+      heightCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}height_cm'],
+      ),
+      weightKg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}weight_kg'],
+      ),
+      targetWeightKg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}target_weight_kg'],
+      ),
+      bodyFatPct: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}body_fat_pct'],
+      ),
+      activityLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}activity_level'],
+      )!,
+      goal: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}goal'],
+      )!,
+      experienceLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}experience_level'],
+      )!,
+      weeklyFreq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}weekly_freq'],
+      )!,
+      activeSplitId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}active_split_id'],
+      ),
+      maintenanceManual: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}maintenance_manual'],
+      )!,
+      maintenanceKcalManual: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}maintenance_kcal_manual'],
+      ),
+    );
+  }
+
+  @override
+  $ProfilesTable createAlias(String alias) {
+    return $ProfilesTable(attachedDatabase, alias);
+  }
+}
+
+class Profile extends DataClass implements Insertable<Profile> {
+  final int id;
+  final String sex;
+  final int? age;
+  final double? heightCm;
+  final double? weightKg;
+  final double? targetWeightKg;
+  final double? bodyFatPct;
+  final String activityLevel;
+  final String goal;
+  final String experienceLevel;
+  final int weeklyFreq;
+  final int? activeSplitId;
+  final bool maintenanceManual;
+  final double? maintenanceKcalManual;
+  const Profile({
+    required this.id,
+    required this.sex,
+    this.age,
+    this.heightCm,
+    this.weightKg,
+    this.targetWeightKg,
+    this.bodyFatPct,
+    required this.activityLevel,
+    required this.goal,
+    required this.experienceLevel,
+    required this.weeklyFreq,
+    this.activeSplitId,
+    required this.maintenanceManual,
+    this.maintenanceKcalManual,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['sex'] = Variable<String>(sex);
+    if (!nullToAbsent || age != null) {
+      map['age'] = Variable<int>(age);
+    }
+    if (!nullToAbsent || heightCm != null) {
+      map['height_cm'] = Variable<double>(heightCm);
+    }
+    if (!nullToAbsent || weightKg != null) {
+      map['weight_kg'] = Variable<double>(weightKg);
+    }
+    if (!nullToAbsent || targetWeightKg != null) {
+      map['target_weight_kg'] = Variable<double>(targetWeightKg);
+    }
+    if (!nullToAbsent || bodyFatPct != null) {
+      map['body_fat_pct'] = Variable<double>(bodyFatPct);
+    }
+    map['activity_level'] = Variable<String>(activityLevel);
+    map['goal'] = Variable<String>(goal);
+    map['experience_level'] = Variable<String>(experienceLevel);
+    map['weekly_freq'] = Variable<int>(weeklyFreq);
+    if (!nullToAbsent || activeSplitId != null) {
+      map['active_split_id'] = Variable<int>(activeSplitId);
+    }
+    map['maintenance_manual'] = Variable<bool>(maintenanceManual);
+    if (!nullToAbsent || maintenanceKcalManual != null) {
+      map['maintenance_kcal_manual'] = Variable<double>(maintenanceKcalManual);
+    }
+    return map;
+  }
+
+  ProfilesCompanion toCompanion(bool nullToAbsent) {
+    return ProfilesCompanion(
+      id: Value(id),
+      sex: Value(sex),
+      age: age == null && nullToAbsent ? const Value.absent() : Value(age),
+      heightCm: heightCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(heightCm),
+      weightKg: weightKg == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weightKg),
+      targetWeightKg: targetWeightKg == null && nullToAbsent
+          ? const Value.absent()
+          : Value(targetWeightKg),
+      bodyFatPct: bodyFatPct == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bodyFatPct),
+      activityLevel: Value(activityLevel),
+      goal: Value(goal),
+      experienceLevel: Value(experienceLevel),
+      weeklyFreq: Value(weeklyFreq),
+      activeSplitId: activeSplitId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activeSplitId),
+      maintenanceManual: Value(maintenanceManual),
+      maintenanceKcalManual: maintenanceKcalManual == null && nullToAbsent
+          ? const Value.absent()
+          : Value(maintenanceKcalManual),
+    );
+  }
+
+  factory Profile.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Profile(
+      id: serializer.fromJson<int>(json['id']),
+      sex: serializer.fromJson<String>(json['sex']),
+      age: serializer.fromJson<int?>(json['age']),
+      heightCm: serializer.fromJson<double?>(json['heightCm']),
+      weightKg: serializer.fromJson<double?>(json['weightKg']),
+      targetWeightKg: serializer.fromJson<double?>(json['targetWeightKg']),
+      bodyFatPct: serializer.fromJson<double?>(json['bodyFatPct']),
+      activityLevel: serializer.fromJson<String>(json['activityLevel']),
+      goal: serializer.fromJson<String>(json['goal']),
+      experienceLevel: serializer.fromJson<String>(json['experienceLevel']),
+      weeklyFreq: serializer.fromJson<int>(json['weeklyFreq']),
+      activeSplitId: serializer.fromJson<int?>(json['activeSplitId']),
+      maintenanceManual: serializer.fromJson<bool>(json['maintenanceManual']),
+      maintenanceKcalManual: serializer.fromJson<double?>(
+        json['maintenanceKcalManual'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'sex': serializer.toJson<String>(sex),
+      'age': serializer.toJson<int?>(age),
+      'heightCm': serializer.toJson<double?>(heightCm),
+      'weightKg': serializer.toJson<double?>(weightKg),
+      'targetWeightKg': serializer.toJson<double?>(targetWeightKg),
+      'bodyFatPct': serializer.toJson<double?>(bodyFatPct),
+      'activityLevel': serializer.toJson<String>(activityLevel),
+      'goal': serializer.toJson<String>(goal),
+      'experienceLevel': serializer.toJson<String>(experienceLevel),
+      'weeklyFreq': serializer.toJson<int>(weeklyFreq),
+      'activeSplitId': serializer.toJson<int?>(activeSplitId),
+      'maintenanceManual': serializer.toJson<bool>(maintenanceManual),
+      'maintenanceKcalManual': serializer.toJson<double?>(
+        maintenanceKcalManual,
+      ),
+    };
+  }
+
+  Profile copyWith({
+    int? id,
+    String? sex,
+    Value<int?> age = const Value.absent(),
+    Value<double?> heightCm = const Value.absent(),
+    Value<double?> weightKg = const Value.absent(),
+    Value<double?> targetWeightKg = const Value.absent(),
+    Value<double?> bodyFatPct = const Value.absent(),
+    String? activityLevel,
+    String? goal,
+    String? experienceLevel,
+    int? weeklyFreq,
+    Value<int?> activeSplitId = const Value.absent(),
+    bool? maintenanceManual,
+    Value<double?> maintenanceKcalManual = const Value.absent(),
+  }) => Profile(
+    id: id ?? this.id,
+    sex: sex ?? this.sex,
+    age: age.present ? age.value : this.age,
+    heightCm: heightCm.present ? heightCm.value : this.heightCm,
+    weightKg: weightKg.present ? weightKg.value : this.weightKg,
+    targetWeightKg: targetWeightKg.present
+        ? targetWeightKg.value
+        : this.targetWeightKg,
+    bodyFatPct: bodyFatPct.present ? bodyFatPct.value : this.bodyFatPct,
+    activityLevel: activityLevel ?? this.activityLevel,
+    goal: goal ?? this.goal,
+    experienceLevel: experienceLevel ?? this.experienceLevel,
+    weeklyFreq: weeklyFreq ?? this.weeklyFreq,
+    activeSplitId: activeSplitId.present
+        ? activeSplitId.value
+        : this.activeSplitId,
+    maintenanceManual: maintenanceManual ?? this.maintenanceManual,
+    maintenanceKcalManual: maintenanceKcalManual.present
+        ? maintenanceKcalManual.value
+        : this.maintenanceKcalManual,
+  );
+  Profile copyWithCompanion(ProfilesCompanion data) {
+    return Profile(
+      id: data.id.present ? data.id.value : this.id,
+      sex: data.sex.present ? data.sex.value : this.sex,
+      age: data.age.present ? data.age.value : this.age,
+      heightCm: data.heightCm.present ? data.heightCm.value : this.heightCm,
+      weightKg: data.weightKg.present ? data.weightKg.value : this.weightKg,
+      targetWeightKg: data.targetWeightKg.present
+          ? data.targetWeightKg.value
+          : this.targetWeightKg,
+      bodyFatPct: data.bodyFatPct.present
+          ? data.bodyFatPct.value
+          : this.bodyFatPct,
+      activityLevel: data.activityLevel.present
+          ? data.activityLevel.value
+          : this.activityLevel,
+      goal: data.goal.present ? data.goal.value : this.goal,
+      experienceLevel: data.experienceLevel.present
+          ? data.experienceLevel.value
+          : this.experienceLevel,
+      weeklyFreq: data.weeklyFreq.present
+          ? data.weeklyFreq.value
+          : this.weeklyFreq,
+      activeSplitId: data.activeSplitId.present
+          ? data.activeSplitId.value
+          : this.activeSplitId,
+      maintenanceManual: data.maintenanceManual.present
+          ? data.maintenanceManual.value
+          : this.maintenanceManual,
+      maintenanceKcalManual: data.maintenanceKcalManual.present
+          ? data.maintenanceKcalManual.value
+          : this.maintenanceKcalManual,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Profile(')
+          ..write('id: $id, ')
+          ..write('sex: $sex, ')
+          ..write('age: $age, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('targetWeightKg: $targetWeightKg, ')
+          ..write('bodyFatPct: $bodyFatPct, ')
+          ..write('activityLevel: $activityLevel, ')
+          ..write('goal: $goal, ')
+          ..write('experienceLevel: $experienceLevel, ')
+          ..write('weeklyFreq: $weeklyFreq, ')
+          ..write('activeSplitId: $activeSplitId, ')
+          ..write('maintenanceManual: $maintenanceManual, ')
+          ..write('maintenanceKcalManual: $maintenanceKcalManual')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    sex,
+    age,
+    heightCm,
+    weightKg,
+    targetWeightKg,
+    bodyFatPct,
+    activityLevel,
+    goal,
+    experienceLevel,
+    weeklyFreq,
+    activeSplitId,
+    maintenanceManual,
+    maintenanceKcalManual,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Profile &&
+          other.id == this.id &&
+          other.sex == this.sex &&
+          other.age == this.age &&
+          other.heightCm == this.heightCm &&
+          other.weightKg == this.weightKg &&
+          other.targetWeightKg == this.targetWeightKg &&
+          other.bodyFatPct == this.bodyFatPct &&
+          other.activityLevel == this.activityLevel &&
+          other.goal == this.goal &&
+          other.experienceLevel == this.experienceLevel &&
+          other.weeklyFreq == this.weeklyFreq &&
+          other.activeSplitId == this.activeSplitId &&
+          other.maintenanceManual == this.maintenanceManual &&
+          other.maintenanceKcalManual == this.maintenanceKcalManual);
+}
+
+class ProfilesCompanion extends UpdateCompanion<Profile> {
+  final Value<int> id;
+  final Value<String> sex;
+  final Value<int?> age;
+  final Value<double?> heightCm;
+  final Value<double?> weightKg;
+  final Value<double?> targetWeightKg;
+  final Value<double?> bodyFatPct;
+  final Value<String> activityLevel;
+  final Value<String> goal;
+  final Value<String> experienceLevel;
+  final Value<int> weeklyFreq;
+  final Value<int?> activeSplitId;
+  final Value<bool> maintenanceManual;
+  final Value<double?> maintenanceKcalManual;
+  const ProfilesCompanion({
+    this.id = const Value.absent(),
+    this.sex = const Value.absent(),
+    this.age = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.weightKg = const Value.absent(),
+    this.targetWeightKg = const Value.absent(),
+    this.bodyFatPct = const Value.absent(),
+    this.activityLevel = const Value.absent(),
+    this.goal = const Value.absent(),
+    this.experienceLevel = const Value.absent(),
+    this.weeklyFreq = const Value.absent(),
+    this.activeSplitId = const Value.absent(),
+    this.maintenanceManual = const Value.absent(),
+    this.maintenanceKcalManual = const Value.absent(),
+  });
+  ProfilesCompanion.insert({
+    this.id = const Value.absent(),
+    this.sex = const Value.absent(),
+    this.age = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.weightKg = const Value.absent(),
+    this.targetWeightKg = const Value.absent(),
+    this.bodyFatPct = const Value.absent(),
+    this.activityLevel = const Value.absent(),
+    this.goal = const Value.absent(),
+    this.experienceLevel = const Value.absent(),
+    this.weeklyFreq = const Value.absent(),
+    this.activeSplitId = const Value.absent(),
+    this.maintenanceManual = const Value.absent(),
+    this.maintenanceKcalManual = const Value.absent(),
+  });
+  static Insertable<Profile> custom({
+    Expression<int>? id,
+    Expression<String>? sex,
+    Expression<int>? age,
+    Expression<double>? heightCm,
+    Expression<double>? weightKg,
+    Expression<double>? targetWeightKg,
+    Expression<double>? bodyFatPct,
+    Expression<String>? activityLevel,
+    Expression<String>? goal,
+    Expression<String>? experienceLevel,
+    Expression<int>? weeklyFreq,
+    Expression<int>? activeSplitId,
+    Expression<bool>? maintenanceManual,
+    Expression<double>? maintenanceKcalManual,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (sex != null) 'sex': sex,
+      if (age != null) 'age': age,
+      if (heightCm != null) 'height_cm': heightCm,
+      if (weightKg != null) 'weight_kg': weightKg,
+      if (targetWeightKg != null) 'target_weight_kg': targetWeightKg,
+      if (bodyFatPct != null) 'body_fat_pct': bodyFatPct,
+      if (activityLevel != null) 'activity_level': activityLevel,
+      if (goal != null) 'goal': goal,
+      if (experienceLevel != null) 'experience_level': experienceLevel,
+      if (weeklyFreq != null) 'weekly_freq': weeklyFreq,
+      if (activeSplitId != null) 'active_split_id': activeSplitId,
+      if (maintenanceManual != null) 'maintenance_manual': maintenanceManual,
+      if (maintenanceKcalManual != null)
+        'maintenance_kcal_manual': maintenanceKcalManual,
+    });
+  }
+
+  ProfilesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? sex,
+    Value<int?>? age,
+    Value<double?>? heightCm,
+    Value<double?>? weightKg,
+    Value<double?>? targetWeightKg,
+    Value<double?>? bodyFatPct,
+    Value<String>? activityLevel,
+    Value<String>? goal,
+    Value<String>? experienceLevel,
+    Value<int>? weeklyFreq,
+    Value<int?>? activeSplitId,
+    Value<bool>? maintenanceManual,
+    Value<double?>? maintenanceKcalManual,
+  }) {
+    return ProfilesCompanion(
+      id: id ?? this.id,
+      sex: sex ?? this.sex,
+      age: age ?? this.age,
+      heightCm: heightCm ?? this.heightCm,
+      weightKg: weightKg ?? this.weightKg,
+      targetWeightKg: targetWeightKg ?? this.targetWeightKg,
+      bodyFatPct: bodyFatPct ?? this.bodyFatPct,
+      activityLevel: activityLevel ?? this.activityLevel,
+      goal: goal ?? this.goal,
+      experienceLevel: experienceLevel ?? this.experienceLevel,
+      weeklyFreq: weeklyFreq ?? this.weeklyFreq,
+      activeSplitId: activeSplitId ?? this.activeSplitId,
+      maintenanceManual: maintenanceManual ?? this.maintenanceManual,
+      maintenanceKcalManual:
+          maintenanceKcalManual ?? this.maintenanceKcalManual,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (sex.present) {
+      map['sex'] = Variable<String>(sex.value);
+    }
+    if (age.present) {
+      map['age'] = Variable<int>(age.value);
+    }
+    if (heightCm.present) {
+      map['height_cm'] = Variable<double>(heightCm.value);
+    }
+    if (weightKg.present) {
+      map['weight_kg'] = Variable<double>(weightKg.value);
+    }
+    if (targetWeightKg.present) {
+      map['target_weight_kg'] = Variable<double>(targetWeightKg.value);
+    }
+    if (bodyFatPct.present) {
+      map['body_fat_pct'] = Variable<double>(bodyFatPct.value);
+    }
+    if (activityLevel.present) {
+      map['activity_level'] = Variable<String>(activityLevel.value);
+    }
+    if (goal.present) {
+      map['goal'] = Variable<String>(goal.value);
+    }
+    if (experienceLevel.present) {
+      map['experience_level'] = Variable<String>(experienceLevel.value);
+    }
+    if (weeklyFreq.present) {
+      map['weekly_freq'] = Variable<int>(weeklyFreq.value);
+    }
+    if (activeSplitId.present) {
+      map['active_split_id'] = Variable<int>(activeSplitId.value);
+    }
+    if (maintenanceManual.present) {
+      map['maintenance_manual'] = Variable<bool>(maintenanceManual.value);
+    }
+    if (maintenanceKcalManual.present) {
+      map['maintenance_kcal_manual'] = Variable<double>(
+        maintenanceKcalManual.value,
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProfilesCompanion(')
+          ..write('id: $id, ')
+          ..write('sex: $sex, ')
+          ..write('age: $age, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('targetWeightKg: $targetWeightKg, ')
+          ..write('bodyFatPct: $bodyFatPct, ')
+          ..write('activityLevel: $activityLevel, ')
+          ..write('goal: $goal, ')
+          ..write('experienceLevel: $experienceLevel, ')
+          ..write('weeklyFreq: $weeklyFreq, ')
+          ..write('activeSplitId: $activeSplitId, ')
+          ..write('maintenanceManual: $maintenanceManual, ')
+          ..write('maintenanceKcalManual: $maintenanceKcalManual')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2878,6 +4467,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $MyTrainingListItemsTable myTrainingListItems =
       $MyTrainingListItemsTable(this);
+  late final $TrainingSplitsTable trainingSplits = $TrainingSplitsTable(this);
+  late final $SplitDaysTable splitDays = $SplitDaysTable(this);
+  late final $SplitDayPartsTable splitDayParts = $SplitDayPartsTable(this);
+  late final $ProfilesTable profiles = $ProfilesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2891,6 +4484,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     workoutSetAssists,
     myTrainingLists,
     myTrainingListItems,
+    trainingSplits,
+    splitDays,
+    splitDayParts,
+    profiles,
   ];
 }
 
@@ -5778,6 +7375,1484 @@ typedef $$MyTrainingListItemsTableProcessedTableManager =
       MyTrainingListItem,
       PrefetchHooks Function({bool listId, bool exerciseId})
     >;
+typedef $$TrainingSplitsTableCreateCompanionBuilder =
+    TrainingSplitsCompanion Function({Value<int> id, required String preset});
+typedef $$TrainingSplitsTableUpdateCompanionBuilder =
+    TrainingSplitsCompanion Function({Value<int> id, Value<String> preset});
+
+final class $$TrainingSplitsTableReferences
+    extends BaseReferences<_$AppDatabase, $TrainingSplitsTable, TrainingSplit> {
+  $$TrainingSplitsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<$SplitDaysTable, List<SplitDay>>
+  _splitDaysRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.splitDays,
+    aliasName: 'training_splits__id__split_days__split_id',
+  );
+
+  $$SplitDaysTableProcessedTableManager get splitDaysRefs {
+    final manager = $$SplitDaysTableTableManager(
+      $_db,
+      $_db.splitDays,
+    ).filter((f) => f.splitId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_splitDaysRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$ProfilesTable, List<Profile>> _profilesRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.profiles,
+    aliasName: 'training_splits__id__profiles__active_split_id',
+  );
+
+  $$ProfilesTableProcessedTableManager get profilesRefs {
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.activeSplitId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_profilesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$TrainingSplitsTableFilterComposer
+    extends Composer<_$AppDatabase, $TrainingSplitsTable> {
+  $$TrainingSplitsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get preset => $composableBuilder(
+    column: $table.preset,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> splitDaysRefs(
+    Expression<bool> Function($$SplitDaysTableFilterComposer f) f,
+  ) {
+    final $$SplitDaysTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.splitDays,
+      getReferencedColumn: (t) => t.splitId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SplitDaysTableFilterComposer(
+            $db: $db,
+            $table: $db.splitDays,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> profilesRefs(
+    Expression<bool> Function($$ProfilesTableFilterComposer f) f,
+  ) {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.activeSplitId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TrainingSplitsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TrainingSplitsTable> {
+  $$TrainingSplitsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get preset => $composableBuilder(
+    column: $table.preset,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TrainingSplitsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TrainingSplitsTable> {
+  $$TrainingSplitsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get preset =>
+      $composableBuilder(column: $table.preset, builder: (column) => column);
+
+  Expression<T> splitDaysRefs<T extends Object>(
+    Expression<T> Function($$SplitDaysTableAnnotationComposer a) f,
+  ) {
+    final $$SplitDaysTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.splitDays,
+      getReferencedColumn: (t) => t.splitId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SplitDaysTableAnnotationComposer(
+            $db: $db,
+            $table: $db.splitDays,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> profilesRefs<T extends Object>(
+    Expression<T> Function($$ProfilesTableAnnotationComposer a) f,
+  ) {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.activeSplitId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TrainingSplitsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TrainingSplitsTable,
+          TrainingSplit,
+          $$TrainingSplitsTableFilterComposer,
+          $$TrainingSplitsTableOrderingComposer,
+          $$TrainingSplitsTableAnnotationComposer,
+          $$TrainingSplitsTableCreateCompanionBuilder,
+          $$TrainingSplitsTableUpdateCompanionBuilder,
+          (TrainingSplit, $$TrainingSplitsTableReferences),
+          TrainingSplit,
+          PrefetchHooks Function({bool splitDaysRefs, bool profilesRefs})
+        > {
+  $$TrainingSplitsTableTableManager(
+    _$AppDatabase db,
+    $TrainingSplitsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TrainingSplitsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TrainingSplitsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TrainingSplitsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> preset = const Value.absent(),
+          }) => TrainingSplitsCompanion(id: id, preset: preset),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String preset,
+          }) => TrainingSplitsCompanion.insert(id: id, preset: preset),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$TrainingSplitsTable, TrainingSplit>(table),
+                  $$TrainingSplitsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({splitDaysRefs = false, profilesRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (splitDaysRefs) db.splitDays,
+                    if (profilesRefs) db.profiles,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (splitDaysRefs)
+                        await $_getPrefetchedData<
+                          TrainingSplit,
+                          $TrainingSplitsTable,
+                          SplitDay
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TrainingSplitsTableReferences
+                              ._splitDaysRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TrainingSplitsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).splitDaysRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.splitId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (profilesRefs)
+                        await $_getPrefetchedData<
+                          TrainingSplit,
+                          $TrainingSplitsTable,
+                          Profile
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TrainingSplitsTableReferences
+                              ._profilesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TrainingSplitsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).profilesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.activeSplitId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$TrainingSplitsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TrainingSplitsTable,
+      TrainingSplit,
+      $$TrainingSplitsTableFilterComposer,
+      $$TrainingSplitsTableOrderingComposer,
+      $$TrainingSplitsTableAnnotationComposer,
+      $$TrainingSplitsTableCreateCompanionBuilder,
+      $$TrainingSplitsTableUpdateCompanionBuilder,
+      (TrainingSplit, $$TrainingSplitsTableReferences),
+      TrainingSplit,
+      PrefetchHooks Function({bool splitDaysRefs, bool profilesRefs})
+    >;
+typedef $$SplitDaysTableCreateCompanionBuilder = SplitDaysCompanion Function({
+  Value<int> id,
+  required int splitId,
+  required int orderIndex,
+  Value<String?> label,
+});
+typedef $$SplitDaysTableUpdateCompanionBuilder = SplitDaysCompanion Function({
+  Value<int> id,
+  Value<int> splitId,
+  Value<int> orderIndex,
+  Value<String?> label,
+});
+
+final class $$SplitDaysTableReferences
+    extends BaseReferences<_$AppDatabase, $SplitDaysTable, SplitDay> {
+  $$SplitDaysTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $TrainingSplitsTable _splitIdTable(_$AppDatabase db) => db
+      .trainingSplits
+      .createAlias('split_days__split_id__training_splits__id');
+
+  $$TrainingSplitsTableProcessedTableManager get splitId {
+    final $_column = $_itemColumn<int>('split_id')!;
+
+    final manager = $$TrainingSplitsTableTableManager(
+      $_db,
+      $_db.trainingSplits,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_splitIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$SplitDayPartsTable, List<SplitDayPart>>
+  _splitDayPartsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.splitDayParts,
+    aliasName: 'split_days__id__split_day_parts__split_day_id',
+  );
+
+  $$SplitDayPartsTableProcessedTableManager get splitDayPartsRefs {
+    final manager = $$SplitDayPartsTableTableManager(
+      $_db,
+      $_db.splitDayParts,
+    ).filter((f) => f.splitDayId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_splitDayPartsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$SplitDaysTableFilterComposer
+    extends Composer<_$AppDatabase, $SplitDaysTable> {
+  $$SplitDaysTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$TrainingSplitsTableFilterComposer get splitId {
+    final $$TrainingSplitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.splitId,
+      referencedTable: $db.trainingSplits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrainingSplitsTableFilterComposer(
+            $db: $db,
+            $table: $db.trainingSplits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> splitDayPartsRefs(
+    Expression<bool> Function($$SplitDayPartsTableFilterComposer f) f,
+  ) {
+    final $$SplitDayPartsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.splitDayParts,
+      getReferencedColumn: (t) => t.splitDayId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SplitDayPartsTableFilterComposer(
+            $db: $db,
+            $table: $db.splitDayParts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$SplitDaysTableOrderingComposer
+    extends Composer<_$AppDatabase, $SplitDaysTable> {
+  $$SplitDaysTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TrainingSplitsTableOrderingComposer get splitId {
+    final $$TrainingSplitsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.splitId,
+      referencedTable: $db.trainingSplits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrainingSplitsTableOrderingComposer(
+            $db: $db,
+            $table: $db.trainingSplits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SplitDaysTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SplitDaysTable> {
+  $$SplitDaysTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get label =>
+      $composableBuilder(column: $table.label, builder: (column) => column);
+
+  $$TrainingSplitsTableAnnotationComposer get splitId {
+    final $$TrainingSplitsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.splitId,
+      referencedTable: $db.trainingSplits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrainingSplitsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.trainingSplits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> splitDayPartsRefs<T extends Object>(
+    Expression<T> Function($$SplitDayPartsTableAnnotationComposer a) f,
+  ) {
+    final $$SplitDayPartsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.splitDayParts,
+      getReferencedColumn: (t) => t.splitDayId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SplitDayPartsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.splitDayParts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$SplitDaysTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SplitDaysTable,
+          SplitDay,
+          $$SplitDaysTableFilterComposer,
+          $$SplitDaysTableOrderingComposer,
+          $$SplitDaysTableAnnotationComposer,
+          $$SplitDaysTableCreateCompanionBuilder,
+          $$SplitDaysTableUpdateCompanionBuilder,
+          (SplitDay, $$SplitDaysTableReferences),
+          SplitDay,
+          PrefetchHooks Function({bool splitId, bool splitDayPartsRefs})
+        > {
+  $$SplitDaysTableTableManager(_$AppDatabase db, $SplitDaysTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SplitDaysTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SplitDaysTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SplitDaysTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> splitId = const Value.absent(),
+                Value<int> orderIndex = const Value.absent(),
+                Value<String?> label = const Value.absent(),
+              }) => SplitDaysCompanion(
+                id: id,
+                splitId: splitId,
+                orderIndex: orderIndex,
+                label: label,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int splitId,
+                required int orderIndex,
+                Value<String?> label = const Value.absent(),
+              }) => SplitDaysCompanion.insert(
+                id: id,
+                splitId: splitId,
+                orderIndex: orderIndex,
+                label: label,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SplitDaysTable, SplitDay>(table),
+                  $$SplitDaysTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({splitId = false, splitDayPartsRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (splitDayPartsRefs) db.splitDayParts,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (splitId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.splitId,
+                            referencedTable: $$SplitDaysTableReferences
+                                ._splitIdTable(db),
+                            referencedColumn: $$SplitDaysTableReferences
+                                ._splitIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (splitDayPartsRefs)
+                        await $_getPrefetchedData<
+                          SplitDay,
+                          $SplitDaysTable,
+                          SplitDayPart
+                        >(
+                          currentTable: table,
+                          referencedTable: $$SplitDaysTableReferences
+                              ._splitDayPartsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$SplitDaysTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).splitDayPartsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.splitDayId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$SplitDaysTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SplitDaysTable,
+      SplitDay,
+      $$SplitDaysTableFilterComposer,
+      $$SplitDaysTableOrderingComposer,
+      $$SplitDaysTableAnnotationComposer,
+      $$SplitDaysTableCreateCompanionBuilder,
+      $$SplitDaysTableUpdateCompanionBuilder,
+      (SplitDay, $$SplitDaysTableReferences),
+      SplitDay,
+      PrefetchHooks Function({bool splitId, bool splitDayPartsRefs})
+    >;
+typedef $$SplitDayPartsTableCreateCompanionBuilder =
+    SplitDayPartsCompanion Function({
+      Value<int> id,
+      required int splitDayId,
+      required String bodyPart,
+    });
+typedef $$SplitDayPartsTableUpdateCompanionBuilder =
+    SplitDayPartsCompanion Function({
+      Value<int> id,
+      Value<int> splitDayId,
+      Value<String> bodyPart,
+    });
+
+final class $$SplitDayPartsTableReferences
+    extends BaseReferences<_$AppDatabase, $SplitDayPartsTable, SplitDayPart> {
+  $$SplitDayPartsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $SplitDaysTable _splitDayIdTable(_$AppDatabase db) =>
+      db.splitDays.createAlias('split_day_parts__split_day_id__split_days__id');
+
+  $$SplitDaysTableProcessedTableManager get splitDayId {
+    final $_column = $_itemColumn<int>('split_day_id')!;
+
+    final manager = $$SplitDaysTableTableManager(
+      $_db,
+      $_db.splitDays,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_splitDayIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$SplitDayPartsTableFilterComposer
+    extends Composer<_$AppDatabase, $SplitDayPartsTable> {
+  $$SplitDayPartsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bodyPart => $composableBuilder(
+    column: $table.bodyPart,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$SplitDaysTableFilterComposer get splitDayId {
+    final $$SplitDaysTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.splitDayId,
+      referencedTable: $db.splitDays,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SplitDaysTableFilterComposer(
+            $db: $db,
+            $table: $db.splitDays,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SplitDayPartsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SplitDayPartsTable> {
+  $$SplitDayPartsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bodyPart => $composableBuilder(
+    column: $table.bodyPart,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$SplitDaysTableOrderingComposer get splitDayId {
+    final $$SplitDaysTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.splitDayId,
+      referencedTable: $db.splitDays,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SplitDaysTableOrderingComposer(
+            $db: $db,
+            $table: $db.splitDays,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SplitDayPartsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SplitDayPartsTable> {
+  $$SplitDayPartsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get bodyPart =>
+      $composableBuilder(column: $table.bodyPart, builder: (column) => column);
+
+  $$SplitDaysTableAnnotationComposer get splitDayId {
+    final $$SplitDaysTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.splitDayId,
+      referencedTable: $db.splitDays,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SplitDaysTableAnnotationComposer(
+            $db: $db,
+            $table: $db.splitDays,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SplitDayPartsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SplitDayPartsTable,
+          SplitDayPart,
+          $$SplitDayPartsTableFilterComposer,
+          $$SplitDayPartsTableOrderingComposer,
+          $$SplitDayPartsTableAnnotationComposer,
+          $$SplitDayPartsTableCreateCompanionBuilder,
+          $$SplitDayPartsTableUpdateCompanionBuilder,
+          (SplitDayPart, $$SplitDayPartsTableReferences),
+          SplitDayPart,
+          PrefetchHooks Function({bool splitDayId})
+        > {
+  $$SplitDayPartsTableTableManager(_$AppDatabase db, $SplitDayPartsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SplitDayPartsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SplitDayPartsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SplitDayPartsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> splitDayId = const Value.absent(),
+                Value<String> bodyPart = const Value.absent(),
+              }) => SplitDayPartsCompanion(
+                id: id,
+                splitDayId: splitDayId,
+                bodyPart: bodyPart,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int splitDayId,
+                required String bodyPart,
+              }) => SplitDayPartsCompanion.insert(
+                id: id,
+                splitDayId: splitDayId,
+                bodyPart: bodyPart,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SplitDayPartsTable, SplitDayPart>(table),
+                  $$SplitDayPartsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({splitDayId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (splitDayId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.splitDayId,
+                        referencedTable: $$SplitDayPartsTableReferences
+                            ._splitDayIdTable(db),
+                        referencedColumn: $$SplitDayPartsTableReferences
+                            ._splitDayIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SplitDayPartsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SplitDayPartsTable,
+      SplitDayPart,
+      $$SplitDayPartsTableFilterComposer,
+      $$SplitDayPartsTableOrderingComposer,
+      $$SplitDayPartsTableAnnotationComposer,
+      $$SplitDayPartsTableCreateCompanionBuilder,
+      $$SplitDayPartsTableUpdateCompanionBuilder,
+      (SplitDayPart, $$SplitDayPartsTableReferences),
+      SplitDayPart,
+      PrefetchHooks Function({bool splitDayId})
+    >;
+typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
+  Value<int> id,
+  Value<String> sex,
+  Value<int?> age,
+  Value<double?> heightCm,
+  Value<double?> weightKg,
+  Value<double?> targetWeightKg,
+  Value<double?> bodyFatPct,
+  Value<String> activityLevel,
+  Value<String> goal,
+  Value<String> experienceLevel,
+  Value<int> weeklyFreq,
+  Value<int?> activeSplitId,
+  Value<bool> maintenanceManual,
+  Value<double?> maintenanceKcalManual,
+});
+typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
+  Value<int> id,
+  Value<String> sex,
+  Value<int?> age,
+  Value<double?> heightCm,
+  Value<double?> weightKg,
+  Value<double?> targetWeightKg,
+  Value<double?> bodyFatPct,
+  Value<String> activityLevel,
+  Value<String> goal,
+  Value<String> experienceLevel,
+  Value<int> weeklyFreq,
+  Value<int?> activeSplitId,
+  Value<bool> maintenanceManual,
+  Value<double?> maintenanceKcalManual,
+});
+
+final class $$ProfilesTableReferences
+    extends BaseReferences<_$AppDatabase, $ProfilesTable, Profile> {
+  $$ProfilesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $TrainingSplitsTable _activeSplitIdTable(_$AppDatabase db) => db
+      .trainingSplits
+      .createAlias('profiles__active_split_id__training_splits__id');
+
+  $$TrainingSplitsTableProcessedTableManager? get activeSplitId {
+    final $_column = $_itemColumn<int>('active_split_id');
+    if ($_column == null) return null;
+    final manager = $$TrainingSplitsTableTableManager(
+      $_db,
+      $_db.trainingSplits,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_activeSplitIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ProfilesTableFilterComposer
+    extends Composer<_$AppDatabase, $ProfilesTable> {
+  $$ProfilesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sex => $composableBuilder(
+    column: $table.sex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get age => $composableBuilder(
+    column: $table.age,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get heightCm => $composableBuilder(
+    column: $table.heightCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get weightKg => $composableBuilder(
+    column: $table.weightKg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get targetWeightKg => $composableBuilder(
+    column: $table.targetWeightKg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get bodyFatPct => $composableBuilder(
+    column: $table.bodyFatPct,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activityLevel => $composableBuilder(
+    column: $table.activityLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get goal => $composableBuilder(
+    column: $table.goal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get experienceLevel => $composableBuilder(
+    column: $table.experienceLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get weeklyFreq => $composableBuilder(
+    column: $table.weeklyFreq,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get maintenanceManual => $composableBuilder(
+    column: $table.maintenanceManual,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get maintenanceKcalManual => $composableBuilder(
+    column: $table.maintenanceKcalManual,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$TrainingSplitsTableFilterComposer get activeSplitId {
+    final $$TrainingSplitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activeSplitId,
+      referencedTable: $db.trainingSplits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrainingSplitsTableFilterComposer(
+            $db: $db,
+            $table: $db.trainingSplits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ProfilesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProfilesTable> {
+  $$ProfilesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sex => $composableBuilder(
+    column: $table.sex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get age => $composableBuilder(
+    column: $table.age,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get heightCm => $composableBuilder(
+    column: $table.heightCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get weightKg => $composableBuilder(
+    column: $table.weightKg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get targetWeightKg => $composableBuilder(
+    column: $table.targetWeightKg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get bodyFatPct => $composableBuilder(
+    column: $table.bodyFatPct,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get activityLevel => $composableBuilder(
+    column: $table.activityLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get goal => $composableBuilder(
+    column: $table.goal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get experienceLevel => $composableBuilder(
+    column: $table.experienceLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get weeklyFreq => $composableBuilder(
+    column: $table.weeklyFreq,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get maintenanceManual => $composableBuilder(
+    column: $table.maintenanceManual,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get maintenanceKcalManual => $composableBuilder(
+    column: $table.maintenanceKcalManual,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TrainingSplitsTableOrderingComposer get activeSplitId {
+    final $$TrainingSplitsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activeSplitId,
+      referencedTable: $db.trainingSplits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrainingSplitsTableOrderingComposer(
+            $db: $db,
+            $table: $db.trainingSplits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ProfilesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProfilesTable> {
+  $$ProfilesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get sex =>
+      $composableBuilder(column: $table.sex, builder: (column) => column);
+
+  GeneratedColumn<int> get age =>
+      $composableBuilder(column: $table.age, builder: (column) => column);
+
+  GeneratedColumn<double> get heightCm =>
+      $composableBuilder(column: $table.heightCm, builder: (column) => column);
+
+  GeneratedColumn<double> get weightKg =>
+      $composableBuilder(column: $table.weightKg, builder: (column) => column);
+
+  GeneratedColumn<double> get targetWeightKg => $composableBuilder(
+    column: $table.targetWeightKg,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get bodyFatPct => $composableBuilder(
+    column: $table.bodyFatPct,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get activityLevel => $composableBuilder(
+    column: $table.activityLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get goal =>
+      $composableBuilder(column: $table.goal, builder: (column) => column);
+
+  GeneratedColumn<String> get experienceLevel => $composableBuilder(
+    column: $table.experienceLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get weeklyFreq => $composableBuilder(
+    column: $table.weeklyFreq,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get maintenanceManual => $composableBuilder(
+    column: $table.maintenanceManual,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get maintenanceKcalManual => $composableBuilder(
+    column: $table.maintenanceKcalManual,
+    builder: (column) => column,
+  );
+
+  $$TrainingSplitsTableAnnotationComposer get activeSplitId {
+    final $$TrainingSplitsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activeSplitId,
+      referencedTable: $db.trainingSplits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrainingSplitsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.trainingSplits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ProfilesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProfilesTable,
+          Profile,
+          $$ProfilesTableFilterComposer,
+          $$ProfilesTableOrderingComposer,
+          $$ProfilesTableAnnotationComposer,
+          $$ProfilesTableCreateCompanionBuilder,
+          $$ProfilesTableUpdateCompanionBuilder,
+          (Profile, $$ProfilesTableReferences),
+          Profile,
+          PrefetchHooks Function({bool activeSplitId})
+        > {
+  $$ProfilesTableTableManager(_$AppDatabase db, $ProfilesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProfilesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProfilesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProfilesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> sex = const Value.absent(),
+                Value<int?> age = const Value.absent(),
+                Value<double?> heightCm = const Value.absent(),
+                Value<double?> weightKg = const Value.absent(),
+                Value<double?> targetWeightKg = const Value.absent(),
+                Value<double?> bodyFatPct = const Value.absent(),
+                Value<String> activityLevel = const Value.absent(),
+                Value<String> goal = const Value.absent(),
+                Value<String> experienceLevel = const Value.absent(),
+                Value<int> weeklyFreq = const Value.absent(),
+                Value<int?> activeSplitId = const Value.absent(),
+                Value<bool> maintenanceManual = const Value.absent(),
+                Value<double?> maintenanceKcalManual = const Value.absent(),
+              }) => ProfilesCompanion(
+                id: id,
+                sex: sex,
+                age: age,
+                heightCm: heightCm,
+                weightKg: weightKg,
+                targetWeightKg: targetWeightKg,
+                bodyFatPct: bodyFatPct,
+                activityLevel: activityLevel,
+                goal: goal,
+                experienceLevel: experienceLevel,
+                weeklyFreq: weeklyFreq,
+                activeSplitId: activeSplitId,
+                maintenanceManual: maintenanceManual,
+                maintenanceKcalManual: maintenanceKcalManual,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> sex = const Value.absent(),
+                Value<int?> age = const Value.absent(),
+                Value<double?> heightCm = const Value.absent(),
+                Value<double?> weightKg = const Value.absent(),
+                Value<double?> targetWeightKg = const Value.absent(),
+                Value<double?> bodyFatPct = const Value.absent(),
+                Value<String> activityLevel = const Value.absent(),
+                Value<String> goal = const Value.absent(),
+                Value<String> experienceLevel = const Value.absent(),
+                Value<int> weeklyFreq = const Value.absent(),
+                Value<int?> activeSplitId = const Value.absent(),
+                Value<bool> maintenanceManual = const Value.absent(),
+                Value<double?> maintenanceKcalManual = const Value.absent(),
+              }) => ProfilesCompanion.insert(
+                id: id,
+                sex: sex,
+                age: age,
+                heightCm: heightCm,
+                weightKg: weightKg,
+                targetWeightKg: targetWeightKg,
+                bodyFatPct: bodyFatPct,
+                activityLevel: activityLevel,
+                goal: goal,
+                experienceLevel: experienceLevel,
+                weeklyFreq: weeklyFreq,
+                activeSplitId: activeSplitId,
+                maintenanceManual: maintenanceManual,
+                maintenanceKcalManual: maintenanceKcalManual,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ProfilesTable, Profile>(table),
+                  $$ProfilesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({activeSplitId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (activeSplitId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.activeSplitId,
+                        referencedTable: $$ProfilesTableReferences
+                            ._activeSplitIdTable(db),
+                        referencedColumn: $$ProfilesTableReferences
+                            ._activeSplitIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$ProfilesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProfilesTable,
+      Profile,
+      $$ProfilesTableFilterComposer,
+      $$ProfilesTableOrderingComposer,
+      $$ProfilesTableAnnotationComposer,
+      $$ProfilesTableCreateCompanionBuilder,
+      $$ProfilesTableUpdateCompanionBuilder,
+      (Profile, $$ProfilesTableReferences),
+      Profile,
+      PrefetchHooks Function({bool activeSplitId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -5798,4 +8873,12 @@ class $AppDatabaseManager {
       $$MyTrainingListsTableTableManager(_db, _db.myTrainingLists);
   $$MyTrainingListItemsTableTableManager get myTrainingListItems =>
       $$MyTrainingListItemsTableTableManager(_db, _db.myTrainingListItems);
+  $$TrainingSplitsTableTableManager get trainingSplits =>
+      $$TrainingSplitsTableTableManager(_db, _db.trainingSplits);
+  $$SplitDaysTableTableManager get splitDays =>
+      $$SplitDaysTableTableManager(_db, _db.splitDays);
+  $$SplitDayPartsTableTableManager get splitDayParts =>
+      $$SplitDayPartsTableTableManager(_db, _db.splitDayParts);
+  $$ProfilesTableTableManager get profiles =>
+      $$ProfilesTableTableManager(_db, _db.profiles);
 }
