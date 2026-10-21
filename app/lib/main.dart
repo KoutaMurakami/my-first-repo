@@ -6,6 +6,7 @@ import 'screens/meal_screen.dart';
 import 'screens/my_training_list_screen.dart';
 import 'screens/weight_screen.dart';
 import 'screens/workout_home_screen.dart';
+import 'theme/app_theme.dart';
 
 Future<void> main() async {
   // プラグイン(path_providerなど)を使う前に必要な初期化。
@@ -36,10 +37,7 @@ class FitnessApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'フィットネス管理アプリ',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-        useMaterial3: true,
-      ),
+      theme: buildAppTheme(),
       home: HomeShell(database: database),
     );
   }

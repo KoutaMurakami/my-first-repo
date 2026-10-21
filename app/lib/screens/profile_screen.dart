@@ -2,6 +2,7 @@ import 'package:drift/drift.dart' show OrderingTerm, Value;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../theme/app_theme.dart';
 import '../calc/nutrition_calc.dart';
 import '../database/app_database.dart';
 import 'split_editor_screen.dart';
@@ -211,7 +212,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 12),
           const Text('トレーニング', style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          const Text('目的', style: TextStyle(fontSize: 12, color: Colors.grey)),
+          const Text('目的', style: TextStyle(fontSize: 12, color: AppColors.textTertiary)),
           Wrap(
             spacing: 8,
             children: goalOptions
@@ -223,7 +224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 .toList(),
           ),
           const SizedBox(height: 8),
-          const Text('経験', style: TextStyle(fontSize: 12, color: Colors.grey)),
+          const Text('経験', style: TextStyle(fontSize: 12, color: AppColors.textTertiary)),
           Wrap(
             spacing: 8,
             children: experienceOptions
@@ -266,7 +267,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 20),
           const Text('メンテナンスカロリー', style: TextStyle(fontWeight: FontWeight.bold)),
           Text('自動計算値: ${result.tdeeAuto.round()}kcal',
-              style: const TextStyle(color: Colors.grey)),
+              style: const TextStyle(color: AppColors.textTertiary)),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: const Text('実測値で上書きする'),
@@ -337,7 +338,7 @@ class _SummaryCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(result.method,
-                style: const TextStyle(fontSize: 11, color: Colors.black54)),
+                style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
           ],
         ),
       ),

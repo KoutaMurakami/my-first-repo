@@ -4,6 +4,7 @@ import 'package:drift/drift.dart' show OrderingTerm, Value;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../theme/app_theme.dart';
 import '../database/app_database.dart';
 import 'my_training_list_screen.dart' show setTypeOptions;
 
@@ -328,13 +329,13 @@ class _WorkoutLoggingScreenState extends State<WorkoutLoggingScreen> {
                     Text(
                       '自力 ${(reps - assistedReps).clamp(0, reps)}回 '
                       '＋ 補助 $assistedReps回 = 計 $reps回',
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      style: const TextStyle(color: AppColors.textTertiary, fontSize: 12),
                     ),
                   ] else
                     Text(
                       'このセットの $reps回 すべてを補助ありとして記録します'
                       '（自己ベスト・前回比較の対象から除外）',
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      style: const TextStyle(color: AppColors.textTertiary, fontSize: 12),
                     ),
                   const SizedBox(height: 12),
                   Wrap(
@@ -752,7 +753,7 @@ class _SetRow extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 11,
-                    color: up ? Theme.of(context).colorScheme.primary : Colors.grey,
+                    color: up ? Theme.of(context).colorScheme.primary : AppColors.textTertiary,
                   ),
                 ),
               ),
@@ -784,7 +785,7 @@ class _SetRow extends StatelessWidget {
                     ? 'セット全体を補助 · ${_assistByLabels[set.assist!.assistedBy]}'
                     : '補助 +${set.assist!.assistedReps ?? 0}回 · '
                         '${_assistByLabels[set.assist!.assistedBy]}',
-                style: const TextStyle(fontSize: 11, color: Colors.brown),
+                style: const TextStyle(fontSize: 11, color: AppColors.mealText),
               ),
             ),
         ],

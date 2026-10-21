@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' show OrderingTerm, Value;
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
 import '../database/app_database.dart';
 
 // 分割法エディタで選べる部位。筋トレ記録の6分類(胸/背中/脚/肩/腕/体幹)より細かい
@@ -298,7 +299,7 @@ class _SplitEditorScreenState extends State<SplitEditorScreen> {
                 const SizedBox(height: 8),
                 Text(
                   presetDescriptions[_preset] ?? '',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 12, color: AppColors.textTertiary),
                 ),
                 const SizedBox(height: 16),
                 for (var i = 0; i < _days.length; i++)

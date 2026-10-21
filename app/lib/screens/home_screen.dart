@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' show OrderingTerm, TableUpdateQuery;
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
 import '../data/meal_repository.dart';
 import '../data/nutrition_targets.dart';
 import '../database/app_database.dart';
@@ -129,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: Colors.grey,
+                              color: AppColors.textTertiary,
                             ),
                           ),
                           const SizedBox(height: 2),

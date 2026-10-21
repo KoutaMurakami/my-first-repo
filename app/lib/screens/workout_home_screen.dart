@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' show OrderingTerm, Value;
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
 import '../database/app_database.dart';
 import 'exercise_select_screen.dart';
 import 'my_training_list_screen.dart';
@@ -126,7 +127,7 @@ class _WorkoutHomeScreenState extends State<WorkoutHomeScreen> {
                 }
                 final history = snapshot.data!;
                 if (history.isEmpty) {
-                  return const Text('まだ記録がありません', style: TextStyle(color: Colors.grey));
+                  return const Text('まだ記録がありません', style: TextStyle(color: AppColors.textTertiary));
                 }
                 return Column(
                   children: history
@@ -145,7 +146,7 @@ class _WorkoutHomeScreenState extends State<WorkoutHomeScreen> {
                                   Text(
                                     h.kcal == null ? '—' : '${h.kcal}kcal',
                                     style: const TextStyle(
-                                        fontSize: 11, color: Colors.brown),
+                                        fontSize: 11, color: AppColors.mealText),
                                   ),
                                 ],
                               ),
@@ -290,7 +291,7 @@ class _PausedSessionCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text('${info.done} / ${info.total} セット記録済み'),
                 const Text('中断までの記録は保存されています',
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12, color: AppColors.textTertiary)),
                 const SizedBox(height: 8),
                 Row(
                   children: [
