@@ -62,6 +62,18 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # アプリ全体で使うフォント(丸ゴシック)。オフラインでも確実に表示できるよう、
+  # 実行時に取得せずアプリに同梱している。ライセンスは assets/fonts/LICENSE.md を参照。
+  # 太さは標準(400)・中(500)・太(700)の3種類だけを同梱している。
+  fonts:
+    - family: MPLUSRounded1c
+      fonts:
+        - asset: assets/fonts/MPLUSRounded1c-Regular.ttf
+        - asset: assets/fonts/MPLUSRounded1c-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/MPLUSRounded1c-Bold.ttf
+          weight: 700
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
