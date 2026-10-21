@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../theme/app_theme.dart';
 import '../data/meal_repository.dart';
 import '../data/nutrition_targets.dart';
 import '../database/app_database.dart';
@@ -213,7 +214,7 @@ class _MealRecordScreenState extends State<MealRecordScreen> {
           padding: EdgeInsets.symmetric(vertical: 24),
           child: Center(
             child: Text('写真からの自動認識(AI)は今後対応予定です',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: AppColors.textTertiary)),
           ),
         );
       case _SourceTab.myList:
@@ -234,7 +235,7 @@ class _MealRecordScreenState extends State<MealRecordScreen> {
             child: Center(
               child: Text('マイリストはまだありません。\n食品を追加して「この内容をマイリストに保存」で作れます',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey)),
+                  style: TextStyle(color: AppColors.textTertiary)),
             ),
           );
         }
@@ -309,7 +310,7 @@ class _MealRecordScreenState extends State<MealRecordScreen> {
           const Padding(
             padding: EdgeInsets.only(bottom: 4),
             child: Text('不足を補うおすすめ',
-                style: TextStyle(fontSize: 12, color: Colors.grey)),
+                style: TextStyle(fontSize: 12, color: AppColors.textTertiary)),
           ),
         if (shown.isEmpty)
           const Padding(
@@ -348,7 +349,7 @@ class _MealRecordScreenState extends State<MealRecordScreen> {
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
             child: Text('食品を追加するとここに並びます',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: AppColors.textTertiary)),
           ),
         for (final item in _draft)
           ListTile(

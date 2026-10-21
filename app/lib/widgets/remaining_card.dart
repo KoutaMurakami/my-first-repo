@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
 import '../data/meal_repository.dart';
 import '../data/nutrition_targets.dart';
 
@@ -12,6 +13,13 @@ import '../data/nutrition_targets.dart';
 // [eaten] には「すでに食べた分」を渡す。食事記録画面では
 // 「食べた分 + これから記録する分(ドラフト)」を渡すことで、
 // 記録後の残りをその場でプレビューできる。
+// PFCそれぞれのバーの色(docs/design/README.md のカラートークン)。
+const Map<String, Color> _macroColors = {
+  'p': AppColors.primary,
+  'f': AppColors.meal,
+  'c': AppColors.carbs,
+};
+
 class RemainingCard extends StatelessWidget {
   const RemainingCard({
     super.key,
@@ -60,7 +68,7 @@ class RemainingCard extends StatelessWidget {
               Row(
                 children: [
                   _tile('摂取', eatenKcal, scheme.tertiary),
-                  _tile('消費(予測)', targets.tdee, scheme.primary),
+                  _tile('消費(予測)', targets.tdee, scheme.onPrimaryContainer),
                   _tile('残り', leftKcal, leftKcal >= 0 ? null : scheme.error),
                 ],
               )
@@ -84,7 +92,7 @@ class RemainingCard extends StatelessWidget {
                   const Spacer(),
                   Text(
                     '摂取 ${eatenKcal.round()} / 目標 ${targets.kcal.round()}',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    style: const TextStyle(fontSize: 12, color: AppColors.textTertiary),
                   ),
                 ],
               ),
@@ -126,7 +134,7 @@ class RemainingCard extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+          Text(label, style: const TextStyle(fontSize: 11, color: AppColors.textTertiary)),
           Text(
             value.round().toString(),
             style: TextStyle(
@@ -137,7 +145,7 @@ class RemainingCard extends StatelessWidget {
           ),
           const Text(
             'kcal',
-            style: TextStyle(fontSize: 10, color: Colors.grey),
+            style: TextStyle(fontSize: 10, color: AppColors.textTertiary),
           ),
         ],
       ),
@@ -173,6 +181,9 @@ class RemainingCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: target <= 0 ? 0 : (got / target).clamp(0.0, 1.0),
               minHeight: 6,
+              // PFCの色分け: たんぱく質=深緑 / 脂質=テラコッタ / 炭水化物=オリーブ
+              color: _macroColors[key],
+              borderRadius: BorderRadius.circular(3),
             ),
           ),
           const SizedBox(width: 10),

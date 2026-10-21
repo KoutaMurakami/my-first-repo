@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
 import '../database/app_database.dart';
 
 // 体重推移カードで切り替えられる表示期間。(ラベル, 日数)
@@ -110,7 +111,7 @@ class _WeightTrendCardState extends State<WeightTrendCard> {
                   child: Center(
                     child: Text(
                       '体重を記録するとここに推移が表示されます',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(color: AppColors.textTertiary),
                     ),
                   ),
                 )
@@ -158,7 +159,7 @@ class _WeightTrendCardState extends State<WeightTrendCard> {
                       ? const Center(
                           child: Text(
                             'この期間の記録がありません',
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                            style: TextStyle(color: AppColors.textTertiary, fontSize: 12),
                           ),
                         )
                       : CustomPaint(
@@ -181,7 +182,7 @@ class _WeightTrendCardState extends State<WeightTrendCard> {
                       inPeriod.isEmpty
                           ? ''
                           : '${inPeriod.first.measuredAt.month}/${inPeriod.first.measuredAt.day}',
-                      style: const TextStyle(fontSize: 11, color: Colors.grey),
+                      style: const TextStyle(fontSize: 11, color: AppColors.textTertiary),
                     ),
                     if (goalText != null)
                       Text(
@@ -193,7 +194,7 @@ class _WeightTrendCardState extends State<WeightTrendCard> {
                       ),
                     const Text(
                       '今日',
-                      style: TextStyle(fontSize: 11, color: Colors.grey),
+                      style: TextStyle(fontSize: 11, color: AppColors.textTertiary),
                     ),
                   ],
                 ),

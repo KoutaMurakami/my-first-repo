@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' show TableUpdateQuery;
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
 import '../data/meal_repository.dart';
 import '../data/nutrition_targets.dart';
 import '../database/app_database.dart';
@@ -136,7 +137,7 @@ class _MealScreenState extends State<MealScreen> {
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Text('まだ記録がありません',
-                      style: TextStyle(color: Colors.grey)),
+                      style: TextStyle(color: AppColors.textTertiary)),
                 ),
               for (final meal in intake.meals) _mealTile(meal),
               const SizedBox(height: 12),

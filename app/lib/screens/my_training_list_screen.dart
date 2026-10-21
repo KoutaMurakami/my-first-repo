@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' show OrderingTerm, Value;
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
 import '../database/app_database.dart';
 import 'exercise_select_screen.dart';
 import 'workout_logging_screen.dart';
@@ -205,7 +206,7 @@ class _MyTrainingListTile extends StatelessWidget {
               builder: (context, snapshot) {
                 final items = snapshot.data ?? const [];
                 if (items.isEmpty) {
-                  return const Text('種目未登録', style: TextStyle(color: Colors.grey));
+                  return const Text('種目未登録', style: TextStyle(color: AppColors.textTertiary));
                 }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
