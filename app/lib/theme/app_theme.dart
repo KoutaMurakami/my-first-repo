@@ -9,8 +9,14 @@ import 'package:flutter/material.dart';
 // 画面ごとに色や角丸を直接書くと、後から配色を変えたい時に全画面を直す必要がある。
 // ここにまとめておけば、各画面は「テーマの色を使う」だけで済み、見た目の一貫性も保てる。
 //
-// フォント(IBM Plex Sans / Noto Sans JP)は、アプリに同梱するか
-// 実行時に取得するかの方針が未決定のため、まだ適用していない。
+// フォントは、丸くてやわらかい印象の「M PLUS Rounded 1c」を使う。
+// デザイン見本は IBM Plex Sans / Noto Sans JP(角ゴシック系)を指定していたが、
+// やわらかい印象にしたいという方針で丸ゴシックに変更した。
+// オフラインでも確実に表示できるよう、実行時に取得せず、アプリに同梱している
+// (app/assets/fonts/、ライセンスは同フォルダの LICENSE.md)。
+
+// pubspec.yaml の fonts に登録した family 名と一致させる。
+const appFontFamily = 'MPLUSRounded1c';
 
 // デザイン見本の色(oklchをhexに変換した値)。
 // ColorScheme に入らない色(食事のアクセント、PFCの色など)や、
@@ -83,16 +89,18 @@ ThemeData buildAppTheme() {
   );
 
   // 文字スタイルは、標準のテキストテーマを元に作る(TextStyle を単体で書かない)。
-  // 単体で書くとフォントの指定が空になり、将来フォントを適用した時に反映されない部分が出るため。
-  // フォントを適用する時は、この textTheme を差し替えるだけで全体に反映される。
+  // 単体で書くとフォントの指定が空になり、フォントが反映されない部分が出るため。
+  // フォントは fontFamily で指定するだけで、このテキストテーマ全体に反映される。
   final textTheme = ThemeData(
     useMaterial3: true,
     colorScheme: scheme,
+    fontFamily: appFontFamily,
   ).textTheme;
 
   return ThemeData(
     useMaterial3: true,
     colorScheme: scheme,
+    fontFamily: appFontFamily,
     textTheme: textTheme,
     scaffoldBackgroundColor: AppColors.background,
     dividerColor: AppColors.divider,
